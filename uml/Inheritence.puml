@@ -57,6 +57,7 @@ FlyingObject <|-- AbstractProp
 AbstractAircraft <|-- HeroAircraft
 AbstractAircraft <|-- MobEnemy
 AbstractAircraft <|-- EliteEnemy
+AbstractAircraft <|-- Boss
 
 AbstractBullet <|-- HeroBullet
 AbstractBullet <|-- EnemyBullet
@@ -71,7 +72,8 @@ class HeroAircraft {
     - int direction
     + HeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp):void
     + forward():void
-    + shoot():List<Bullet>
+    + shoot():List<AbstractBullet>
+    + setShootNum(int num):void
 }
 
 class MobEnemy {
@@ -84,6 +86,14 @@ class EliteEnemy {
     - int power
     - int direction
     + EliteEnemy(int locationX, int locationY, int speedX, int speedY, int hp):void
+    + shoot():List<AbstractBullet>
+}
+
+class Boss {
+    - int shootNum
+    - int power
+    - int direction
+    + Boss(int locationX, int locationY, int speedX, int speedY, int hp):void
     + shoot():List<AbstractBullet>
 }
 
@@ -111,7 +121,7 @@ class BombProp {
 
 class BulletProp{
     - String message
-    - int bulletNum
+    - int bulletNumAdd
     + BulletProp(int locationX, int locationY, int speedX, int speedY):void
     + work(HeroAircraft heroAircraft):void
 }

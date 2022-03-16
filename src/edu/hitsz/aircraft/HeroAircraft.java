@@ -54,4 +54,10 @@ public class HeroAircraft extends AbstractAircraft {
         return res;
     }
 
+    public void setShootNum(int num){
+        if (this.shootNum <=5 && this.shootNum >=1){
+            this.shootNum += num;
+        }
+    }
+
 }

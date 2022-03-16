@@ -8,7 +8,7 @@ import edu.hitsz.aircraft.HeroAircraft;
  */
 public class BulletProp extends AbstractProp{
 
-    private int bulletNum = 1; //增加子弹数目
+    private int bulletNumAdd = 1; //增加子弹数目
     private String message = "FireSupply active!";
 
     public BulletProp(int locationX, int locationY, int speedX, int speedY) {
@@ -17,7 +17,7 @@ public class BulletProp extends AbstractProp{
 
     @Override
     public void work (HeroAircraft heroAircraft){
+        heroAircraft.setShootNum(bulletNumAdd);
         System.out.println(this.message);
-
     }
 }
