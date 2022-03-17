@@ -118,6 +118,7 @@ class BombProp {
     - String message
     + BombProp(int locationX, int locationY, int speedX, int speedY):void
     + work(HeroAircraft heroAircraft):void
+    + boom(List<AbstractAircraft> enemyAircrafts):void
 }
 
 class BulletProp{

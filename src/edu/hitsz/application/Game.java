@@ -87,7 +87,7 @@ public class Game extends JPanel {
                 System.out.println(time);
                 // 新敌机产生
                 if (enemyAircrafts.size() < enemyMaxNumber) {
-                    // 隔一定的实践周期，产生精英敌机
+                    // 隔一定的时间周期，产生精英敌机
                     if (time % (20 * cycleDuration) == 0){
                         enemyAircrafts.add(new EliteEnemy((int) ( Math.random() * (Main.WINDOW_WIDTH - ImageManager.MOB_ENEMY_IMAGE.getWidth()))*1,
                                 (int) (Math.random() * Main.WINDOW_HEIGHT * 0.2)*1,
@@ -281,6 +281,9 @@ public class Game extends JPanel {
             }
             if (heroAircraft.crash(prop)){
                 score += 10; // 吃到道具加分
+                if (prop instanceof BombProp){
+                    ((BombProp) prop).boom(enemyAircrafts);
+                }
                 prop.work(heroAircraft);
                 prop.vanish();
             }

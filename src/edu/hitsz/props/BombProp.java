@@ -1,6 +1,9 @@
 package edu.hitsz.props;
 
+import edu.hitsz.aircraft.AbstractAircraft;
 import edu.hitsz.aircraft.HeroAircraft;
+
+import java.util.List;
 
 /**
  * 爆炸道具类
@@ -17,5 +20,10 @@ public class BombProp extends AbstractProp{
     @Override
     public void work(HeroAircraft heroAircraft) {
         System.out.println(this.message);
+    }
+    public void boom(List<AbstractAircraft> enemyAircrafts){
+        for (var enemyAircraft : enemyAircrafts) {
+            enemyAircraft.vanish();
+        }
     }
 }
