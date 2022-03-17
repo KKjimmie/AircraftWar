@@ -87,12 +87,13 @@ public class Game extends JPanel {
                 System.out.println(time);
                 // 新敌机产生
                 if (enemyAircrafts.size() < enemyMaxNumber) {
-                    if (time % (10 * cycleDuration) == 0){
+                    // 隔一定的实践周期，产生精英敌机
+                    if (time % (20 * cycleDuration) == 0){
                         enemyAircrafts.add(new EliteEnemy((int) ( Math.random() * (Main.WINDOW_WIDTH - ImageManager.MOB_ENEMY_IMAGE.getWidth()))*1,
                                 (int) (Math.random() * Main.WINDOW_HEIGHT * 0.2)*1,
                                 10,
-                                5,
-                                30
+                                3,
+                                60
                         ));
                     }else {
                         enemyAircrafts.add(new MobEnemy(
@@ -229,9 +230,11 @@ public class Game extends JPanel {
                     bullet.vanish();
                     if (enemyAircraft.notValid()) {
                         // TODO 获得分数，产生道具补给
+                        // 击败精英敌机，有25%概率产生道具
                         if (enemyAircraft instanceof EliteEnemy){
-                            int rand = (int)(Math.random() * 2);
+                            int rand = (int)(Math.random() * 4);
                             if (rand == 0){
+                                // 暂时把不同道具的产生概率设为相同的
                                 int randProp = (int)(Math.random() * 3);
                                 switch (randProp){
                                     case 0 : props.add(new BloodProp(enemyAircraft.getLocationX(),
@@ -277,6 +280,7 @@ public class Game extends JPanel {
                 continue;
             }
             if (heroAircraft.crash(prop)){
+                score += 10; // 吃到道具加分
                 prop.work(heroAircraft);
                 prop.vanish();
             }

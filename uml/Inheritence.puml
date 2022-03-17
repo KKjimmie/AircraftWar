@@ -45,9 +45,10 @@ abstract class AbstractBullet
 
 abstract class AbstractProp
 {
+    # int bounceNum
     + AbstractProp(int locationX, int locationY, int speedX, int speedY): void
-    + abstract void work(HeroAircraft heroAircraft): void
-
+    + work(HeroAircraft heroAircraft): void
+    + forward():void
 }
 
 FlyingObject <|-- AbstractAircraft

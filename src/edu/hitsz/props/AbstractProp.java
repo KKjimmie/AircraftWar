@@ -1,6 +1,7 @@
 package edu.hitsz.props;
 
 import edu.hitsz.aircraft.HeroAircraft;
+import edu.hitsz.application.Main;
 import edu.hitsz.basic.FlyingObject;
 
 /**
@@ -9,6 +10,8 @@ import edu.hitsz.basic.FlyingObject;
  */
 
 public abstract class AbstractProp extends FlyingObject {
+
+    protected int bounceNum = 2; // 设置道具y轴反弹次数
 
     public AbstractProp(int locationX, int locationY, int speedX, int speedY) {
         super(locationX, locationY, speedX, speedY);
@@ -19,4 +22,20 @@ public abstract class AbstractProp extends FlyingObject {
      * @param heroAircraft 英雄机
      */
     public abstract void work(HeroAircraft heroAircraft);
+
+    @Override
+    public void forward () {
+        // 让道具能够反弹
+        super.forward();
+        if (bounceNum >= 0 && (locationY <= 0 || locationY >= Main.WINDOW_HEIGHT)) {
+            speedY = -speedY;
+            bounceNum --;
+        }
+        // 没有反弹次数时，道具超出y轴边界消失
+        if (bounceNum < 0 && (locationY <= 0 || locationY >= Main.WINDOW_HEIGHT)) {
+            vanish();
+        }
+
+    }
+
 }
