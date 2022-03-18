@@ -230,36 +230,11 @@ public class Game extends JPanel {
                     bullet.vanish();
                     if (enemyAircraft.notValid()) {
                         // TODO 获得分数，产生道具补给
-                        // 击败精英敌机，有25%概率产生道具
                         if (enemyAircraft instanceof EliteEnemy){
-                            int rand = (int)(Math.random() * 4);
-                            if (rand == 0){
-                                // 暂时把不同道具的产生概率设为相同的
-                                int randProp = (int)(Math.random() * 3);
-                                switch (randProp){
-                                    case 0 : props.add(new BloodProp(enemyAircraft.getLocationX(),
-                                            enemyAircraft.getLocationY(),
-                                            10,
-                                            5
-                                            ));
-                                            break;
-                                    case 1 : props.add(new BombProp(enemyAircraft.getLocationX(),
-                                            enemyAircraft.getLocationY(),
-                                            10,
-                                            5
-                                            ));
-                                            break;
-                                    case 2 : props.add(new BulletProp(enemyAircraft.getLocationX(),
-                                            enemyAircraft.getLocationY(),
-                                            10,
-                                            5
-                                            ));
-                                            break;
-                                }
+                            AbstractProp prop = ((EliteEnemy) enemyAircraft).genProp();
+                            if (prop != null){
+                                props.add(prop);
                             }
-
-                        }
-                        if (enemyAircraft instanceof EliteEnemy){
                             score += 30;
                         }else{
                             score += 10;

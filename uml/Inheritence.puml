@@ -32,7 +32,8 @@ abstract class AbstractAircraft
     + AbstractAircraft(int locationX, int locationY, int speedX, int speedY, int hp):void
     + decreaseHp(int decrease):void
     + getHp():int
-    + {abstract} shoot():List<Bullet>
+    + getMaxHp:int
+    + shoot():List<Bullet>
  }
 
 abstract class AbstractBullet
@@ -47,7 +48,7 @@ abstract class AbstractProp
 {
     # int bounceNum
     + AbstractProp(int locationX, int locationY, int speedX, int speedY): void
-    + work(HeroAircraft heroAircraft): void
+    + work(HeroAircraft heroAircraft):void
     + forward():void
 }
 
@@ -87,7 +88,9 @@ class EliteEnemy {
     - int power
     - int direction
     + EliteEnemy(int locationX, int locationY, int speedX, int speedY, int hp):void
+    + forward():void
     + shoot():List<AbstractBullet>
+    + genProp():AbstractProp
 }
 
 class Boss {
