@@ -1,8 +1,9 @@
 package edu.hitsz.aircraft;
 
 import edu.hitsz.application.Main;
-import edu.hitsz.bullet.AbstractBullet;
+import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.EnemyBullet;
+import edu.hitsz.factory.PropFactory;
 import edu.hitsz.props.AbstractProp;
 import edu.hitsz.props.BloodProp;
 import edu.hitsz.props.BombProp;
@@ -36,14 +37,14 @@ public class EliteEnemy extends AbstractAircraft{
     }
 
     @Override
-    public List<AbstractBullet> shoot() {
-        List<AbstractBullet> res = new LinkedList<>();
+    public List<BaseBullet> shoot() {
+        List<BaseBullet> res = new LinkedList<>();
         int x = this.getLocationX();
         int y = this.getLocationY() + direction*2;
         int speedX = 0;
         int speedY = this.getSpeedY() + direction*5;
-        AbstractBullet abstractBullet = new EnemyBullet( x, y, speedX, speedY, power);
-        res.add(abstractBullet);
+        BaseBullet baseBullet = new EnemyBullet( x, y, speedX, speedY, power);
+        res.add(baseBullet);
         return res;
     }
 
@@ -51,23 +52,26 @@ public class EliteEnemy extends AbstractAircraft{
      * 精英敌机产生道具
      */
     public AbstractProp genProp () {
-        // 击败精英敌机，有25%概率产生道具
-        int rand = (int)(Math.random() * 4);
+        // 击败精英敌机，有50%概率产生道具
+        int rand = (int)(Math.random() * 2);
         if (rand == 0){
             // 暂时把不同道具的产生概率设为相同的
             int randProp = (int)(Math.random() * 3);
             switch (randProp){
-                case 0 :return new BloodProp(this.getLocationX(),
+                case 0 :
+                    return PropFactory.produceBloodProp(this.getLocationX(),
                         this.getLocationY(),
                         10,
                         5
                 );
-                case 1 :return new BombProp(this.getLocationX(),
+                case 1 :
+                    return PropFactory.produceBombProp(this.getLocationX(),
                         this.getLocationY(),
                         10,
                         5
                 );
-                case 2 :return new BulletProp(this.getLocationX(),
+                case 2 :
+                    return PropFactory.produceBulletProp(this.getLocationX(),
                         this.getLocationY(),
                         10,
                         5

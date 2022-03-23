@@ -1,0 +1,53 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+abstract class AbstractAircraft
+{
+	# int maxHp
+    # int hp
+    + AbstractAircraft(int locationX, int locationY, int speedX, int speedY, int hp)
+    + decreaseHp(int decrease):void
+    + getHp():int
+    + getMaxHp:int
+    + shoot():List<BaseBullet>
+
+}
+class MobEnemy {
+    + MobEnemy(int locationX, int locationY, int speedX, int speedY, int hp)
+    + forward():void
+    + shoot():List<BaseBullet>
+}
+
+class EliteEnemy {
+    - int power
+    - int direction
+    + EliteEnemy(int locationX, int locationY, int speedX, int speedY, int hp)
+    + forward():void
+    + shoot():List<BaseBullet>
+    + genProp():AbstractProp
+}
+
+class Boss {
+    - int shootNum
+    - int power
+    - int direction
+    + Boss(int locationX, int locationY, int speedX, int speedY, int hp)
+    + genProp():AbstractProp
+    + shoot():List<BaseBullet>
+}
+
+class EnemyFactory {
+    + {static}produceMobEnemy(int locationX, int locationY, int speedX, int speedY, int hp):AbstractAircraft
+    + {static}produceEliteEnemy(int locationX, int locationY, int speedX, int speedY, int hp):AbstractAircraft
+    + {static}produceBoss(int locationX, int locationY, int speedX, int speedY, int hp):AbstractAircraft
+}
+
+AbstractAircraft <|-- MobEnemy
+AbstractAircraft <|-- EliteEnemy
+AbstractAircraft <|-- Boss
+
+MobEnemy <.. EnemyFactory : produce
+EliteEnemy <.. EnemyFactory : produce
+Boss <.. EnemyFactory :produce
+
+@enduml

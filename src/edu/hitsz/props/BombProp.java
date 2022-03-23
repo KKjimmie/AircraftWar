@@ -2,6 +2,8 @@ package edu.hitsz.props;
 
 import edu.hitsz.aircraft.AbstractAircraft;
 import edu.hitsz.aircraft.HeroAircraft;
+import edu.hitsz.bullet.BaseBullet;
+import edu.hitsz.bullet.EnemyBullet;
 
 import java.util.List;
 
@@ -21,9 +23,12 @@ public class BombProp extends AbstractProp{
     public void work(HeroAircraft heroAircraft) {
         System.out.println(this.message);
     }
-    public void boom(List<AbstractAircraft> enemyAircrafts){
+    public void boom(List<AbstractAircraft> enemyAircrafts, List<BaseBullet> enemyBullets){
         for (var enemyAircraft : enemyAircrafts) {
             enemyAircraft.vanish();
+        }
+        for (var enemyBullet : enemyBullets) {
+            enemyBullet.vanish();
         }
     }
 }

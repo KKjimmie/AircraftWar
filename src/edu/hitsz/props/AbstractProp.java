@@ -2,14 +2,14 @@ package edu.hitsz.props;
 
 import edu.hitsz.aircraft.HeroAircraft;
 import edu.hitsz.application.Main;
-import edu.hitsz.basic.FlyingObject;
+import edu.hitsz.basic.AbstractFlyingObject;
 
 /**
  * 抽象道具类
  * @author 柯嘉铭
  */
 
-public abstract class AbstractProp extends FlyingObject {
+public abstract class AbstractProp extends AbstractFlyingObject {
 
     protected int bounceNum = 2; // 设置道具y轴反弹次数
 
