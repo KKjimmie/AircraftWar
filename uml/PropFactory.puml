@@ -33,6 +33,7 @@ class PropFactory{
     + {static} produceBloodProp(locationX, locationY, speedX, speedY):AbstractProp
     + {static} produceBombProp(locationX, locationY, speedX, speedY):AbstractProp
     + {static} produceBulletProp(locationX, locationY, speedX, speedY):AbstractProp
+    + {static} producePropRandomly(locationX, locationY, speedX, speedY):AbstractProp
 }
 
 

@@ -34,7 +34,7 @@ public class Boss extends AbstractAircraft {
         int speedY = direction * 5;
         BaseBullet baseBullet;
         for(int i=0; i<shootNum; i++){
-            baseBullet = new EnemyBullet(x + (i*2 - shootNum + 1)*10, y,  speedX*(i-1), speedY, power);
+            baseBullet = new EnemyBullet(x + (i*2 - shootNum + 1)*50, y,  speedX*(i-1), speedY, power);
             res.add(baseBullet);
         }
         return res;
@@ -42,27 +42,6 @@ public class Boss extends AbstractAircraft {
 
     public AbstractProp genProp(){
         // 击败boss，必掉落装备
-        int randProp = (int)(Math.random() * 3);
-        switch (randProp){
-            case 0 :
-                return PropFactory.produceBloodProp(this.getLocationX(),
-                        this.getLocationY(),
-                        10,
-                        5
-                );
-            case 1 :
-                return PropFactory.produceBombProp(this.getLocationX(),
-                        this.getLocationY(),
-                        10,
-                        5
-                );
-            case 2 :
-                return PropFactory.produceBulletProp(this.getLocationX(),
-                        this.getLocationY(),
-                        10,
-                        5
-                );
-        }
-        return null;
+        return PropFactory.producePropRandomly(this.locationX, this.locationY, 10, 5);
     }
 }

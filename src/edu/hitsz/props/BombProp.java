@@ -1,6 +1,7 @@
 package edu.hitsz.props;
 
 import edu.hitsz.aircraft.AbstractAircraft;
+import edu.hitsz.aircraft.Boss;
 import edu.hitsz.aircraft.HeroAircraft;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.EnemyBullet;
@@ -25,7 +26,9 @@ public class BombProp extends AbstractProp{
     }
     public void boom(List<AbstractAircraft> enemyAircrafts, List<BaseBullet> enemyBullets){
         for (var enemyAircraft : enemyAircrafts) {
-            enemyAircraft.vanish();
+            if (! (enemyAircraft instanceof Boss)){
+                enemyAircraft.vanish();
+            }
         }
         for (var enemyBullet : enemyBullets) {
             enemyBullet.vanish();

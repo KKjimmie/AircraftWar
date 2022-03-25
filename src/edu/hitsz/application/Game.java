@@ -42,8 +42,8 @@ public class Game extends JPanel {
     private int enemyMaxNumber = 5;
 
     private boolean gameOverFlag = false;
-    private boolean bossExistFlag = false;
-    private int bossLevel = 1;
+    private boolean bossExistFlag = false; // 标志Boss是否存在
+    private int bossLevel = 1; // Boss等级
     private int score = 0;
     private int time = 0;
     /**
@@ -289,6 +289,7 @@ public class Game extends JPanel {
                 score += 10; // 吃到道具加分
                 if (prop instanceof BombProp){
                     ((BombProp) prop).boom(enemyAircrafts, enemyBullets);
+                    score += 30; // 爆炸道具会使除Boss外的敌机以及子弹消失，这里加30分
                 }
                 prop.work(heroAircraft);
                 prop.vanish();

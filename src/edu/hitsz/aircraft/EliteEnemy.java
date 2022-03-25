@@ -55,28 +55,7 @@ public class EliteEnemy extends AbstractAircraft{
         // 击败精英敌机，有50%概率产生道具
         int rand = (int)(Math.random() * 2);
         if (rand == 0){
-            // 暂时把不同道具的产生概率设为相同的
-            int randProp = (int)(Math.random() * 3);
-            switch (randProp){
-                case 0 :
-                    return PropFactory.produceBloodProp(this.getLocationX(),
-                        this.getLocationY(),
-                        10,
-                        5
-                );
-                case 1 :
-                    return PropFactory.produceBombProp(this.getLocationX(),
-                        this.getLocationY(),
-                        10,
-                        5
-                );
-                case 2 :
-                    return PropFactory.produceBulletProp(this.getLocationX(),
-                        this.getLocationY(),
-                        10,
-                        5
-                );
-            }
+            return PropFactory.producePropRandomly(this.locationX, this.locationY, 10, 5);
         }
         return null;
     }
