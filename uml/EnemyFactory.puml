@@ -36,18 +36,32 @@ class Boss {
     + shoot():List<BaseBullet>
 }
 
-class EnemyFactory {
-    + {static}produceMobEnemy(int locationX, int locationY, int speedX, int speedY, int hp):AbstractAircraft
-    + {static}produceEliteEnemy(int locationX, int locationY, int speedX, int speedY, int hp):AbstractAircraft
-    + {static}produceBoss(int locationX, int locationY, int speedX, int speedY, int hp):AbstractAircraft
+interface produceEmeny{
+    produceEnemy(int locationX, int locationY, int speedX, int speedY, int hp):AbstractAircraft
+}
+
+class MobEnemyFactory{
+    + produceEnemy(int locationX, int locationY, int speedX, int speedY, int hp):AbstractAircraft
+}
+
+class EliteEnemyFactory{
+    + produceEnemy(int locationX, int locationY, int speedX, int speedY, int hp):AbstractAircraft
+}
+
+class BossFactory{
+    + produceEnemy(int locationX, int locationY, int speedX, int speedY, int hp):AbstractAircraft
 }
 
 AbstractAircraft <|-- MobEnemy
 AbstractAircraft <|-- EliteEnemy
 AbstractAircraft <|-- Boss
 
-MobEnemy <.. EnemyFactory : produce
-EliteEnemy <.. EnemyFactory : produce
-Boss <.. EnemyFactory :produce
+produceEmeny <|.. MobEnemyFactory
+produceEmeny <|.. EliteEnemyFactory
+produceEmeny <|.. BossFactory
+
+MobEnemy <.. MobEnemyFactory : produce
+EliteEnemy <.. EliteEnemyFactory : produce
+Boss <.. BossFactory :produce
 
 @enduml

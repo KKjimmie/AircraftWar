@@ -3,7 +3,9 @@ package edu.hitsz.application;
 import edu.hitsz.aircraft.*;
 import edu.hitsz.basic.AbstractFlyingObject;
 import edu.hitsz.bullet.BaseBullet;
-import edu.hitsz.factory.EnemyFactory;
+import edu.hitsz.factory.BossFactory;
+import edu.hitsz.factory.EliteEnemyFactory;
+import edu.hitsz.factory.MobEnemyFactory;
 import edu.hitsz.props.AbstractProp;
 import edu.hitsz.props.BombProp;
 
@@ -38,6 +40,13 @@ public class Game extends JPanel {
     private final List<BaseBullet> heroBullets;
     private final List<BaseBullet> enemyBullets;
     private final List<AbstractProp> props;
+
+    /**
+     * 创建三个工厂实例
+     */
+    private final MobEnemyFactory mobEnemyFactory = new MobEnemyFactory();
+    private final EliteEnemyFactory eliteEnemyFactory = new EliteEnemyFactory();
+    private final BossFactory bossFactory = new BossFactory();
 
     private int enemyMaxNumber = 5;
 
@@ -89,7 +98,7 @@ public class Game extends JPanel {
                 produceEnemy();
                 // 飞机射出子弹
                 shootAction();
-                // 检查是否达到产生Boss条件
+                // 检查是否达到产生Boss条件并根据条件产生Boss
                 gotoBoss();
             }
 
@@ -151,7 +160,7 @@ public class Game extends JPanel {
         if (enemyAircrafts.size() < enemyMaxNumber) {
             // 隔一定的时间周期，产生精英敌机
             if (time % (15 * cycleDuration) == 0){
-                enemyAircrafts.add(EnemyFactory.produceEliteEnemy(
+                enemyAircrafts.add(eliteEnemyFactory.produceEnemy(
                         (int) (Math.random() * (Main.WINDOW_WIDTH - ImageManager.ELITE_ENEMY_IMAGE.getWidth())),
                         (int) (Math.random() * Main.WINDOW_HEIGHT * 0.2),
                         10,
@@ -159,7 +168,7 @@ public class Game extends JPanel {
                         60
                 ));
             }else {
-                enemyAircrafts.add(EnemyFactory.produceMobEnemy(
+                enemyAircrafts.add(mobEnemyFactory.produceEnemy(
                         (int) (Math.random() * (Main.WINDOW_WIDTH - ImageManager.MOB_ENEMY_IMAGE.getWidth())),
                         (int) (Math.random() * Main.WINDOW_HEIGHT * 0.2),
                         0,
@@ -172,7 +181,7 @@ public class Game extends JPanel {
 
     private void gotoBoss() {
         if (! bossExistFlag && score >= 2000 * bossLevel){
-            enemyAircrafts.add(EnemyFactory.produceBoss(
+            enemyAircrafts.add(bossFactory.produceEnemy(
                     (int) (Math.random() * (Main.WINDOW_WIDTH - ImageManager.BOSS_IMAGE.getWidth())),
                     (int) (Math.random() * Main.WINDOW_WIDTH * 0.1),
                     5,
