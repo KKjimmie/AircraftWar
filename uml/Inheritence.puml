@@ -87,6 +87,9 @@ class MobEnemy {
 class EliteEnemy {
     - int power
     - int direction
+    - BloodPropFactory bloodPropFactory
+    - BombPropFactory bombPropFactory
+    - BulletPropFactory bulletPropFactory
     + EliteEnemy(int locationX, int locationY, int speedX, int speedY, int hp)
     + forward():void
     + shoot():List<BaseBullet>
@@ -97,6 +100,9 @@ class Boss {
     - int shootNum
     - int power
     - int direction
+    - BloodPropFactory bloodPropFactory
+    - BombPropFactory bombPropFactory
+    - BulletPropFactory bulletPropFactory
     + Boss(int locationX, int locationY, int speedX, int speedY, int hp)
     + genProp():AbstractProp
     + shoot():List<BaseBullet>

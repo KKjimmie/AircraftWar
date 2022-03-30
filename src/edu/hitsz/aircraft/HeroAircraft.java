@@ -12,10 +12,22 @@ import java.util.List;
  */
 public class HeroAircraft extends AbstractAircraft {
 
-    /** 攻击方式 */
-    private int shootNum = 1;     //子弹一次发射数量
-    private int power = 30;       //子弹伤害
-    private int direction = -1;  //子弹射击方向 (向上发射：-1，向下发射：1)
+    /**
+     * shootNum 子弹一次发射的数量
+     */
+    private int shootNum = 1;
+    /**
+     * power 子弹伤害
+     */
+    private int power = 30;
+    /**
+     * direction 子弹射击方向 (向上发射：-1，向下发射：1)
+     */
+    private int direction = -1;
+    /**
+     * maxShootNUm 子弹一次最多发射的数量
+     */
+    private final int maxShootNum = 5;
     private volatile static HeroAircraft instance = null;
     /**
      * @param locationX 英雄机位置x坐标
@@ -31,8 +43,9 @@ public class HeroAircraft extends AbstractAircraft {
     public static HeroAircraft getInstance(int locationX, int locationY, int speedX, int speedY, int hp){
         if (instance == null) {
             synchronized (HeroAircraft.class){
-                if (instance == null)
+                if (instance == null) {
                     instance = new HeroAircraft(locationX, locationY, speedX, speedY, hp);
+                }
             }
         }
         return instance;
@@ -65,7 +78,7 @@ public class HeroAircraft extends AbstractAircraft {
     }
 
     public void setShootNum(int num){
-        if (this.shootNum <5 && this.shootNum >=1){
+        if (this.shootNum <this.maxShootNum && this.shootNum >=1){
             this.shootNum += num;
         }
     }

@@ -7,7 +7,7 @@ import edu.hitsz.aircraft.MobEnemy;
  * 普通敌机工厂
  * @author 柯嘉铭
  */
-public class MobEnemyFactory implements produceEnemy {
+public class MobEnemyFactory implements ProduceEnemy {
     @Override
     public AbstractAircraft produceEnemy(int locationX, int locationY, int speedX, int speedY, int hp) {
         return new MobEnemy(locationX, locationY, speedX, speedY, hp);

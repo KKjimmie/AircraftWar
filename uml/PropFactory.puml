@@ -29,19 +29,32 @@ class BulletProp{
     + work(HeroAircraft heroAircraft):void
 }
 
-class PropFactory{
-    + {static} produceBloodProp(locationX, locationY, speedX, speedY):AbstractProp
-    + {static} produceBombProp(locationX, locationY, speedX, speedY):AbstractProp
-    + {static} produceBulletProp(locationX, locationY, speedX, speedY):AbstractProp
-    + {static} producePropRandomly(locationX, locationY, speedX, speedY):AbstractProp
+interface ProduceProp{
+    produceProp(int locationX, int locationY, int speedX, int speedY):AbstractProp
 }
 
+class BloodPropFactory{
+    + produceProp(int locationX, int locationY, int speedX, int speedY):AbstractProp
+}
+
+class BombPropFactory{
+    + produceProp(int locationX, int locationY, int speedX, int speedY):AbstractProp
+}
+
+class BulletPropFactory{
+    + produceProp(int locationX, int locationY, int speedX, int speedY):AbstractProp
+}
 
 AbstractProp <|-- BloodProp
 AbstractProp <|-- BombProp
 AbstractProp <|-- BulletProp
 
-BloodProp <.. PropFactory : produce
-BombProp <.. PropFactory : produce
-BulletProp <.. PropFactory : produce
+ProduceProp <|.. BloodPropFactory
+ProduceProp <|.. BombPropFactory
+ProduceProp <|.. BulletPropFactory
+
+
+BloodProp <.. BloodPropFactory : produce
+BombProp <.. BombPropFactory : produce
+BulletProp <.. BulletPropFactory : produce
 @enduml
