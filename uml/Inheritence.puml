@@ -18,6 +18,7 @@ abstract class AbstractFlyingObject
     + setLocation(double locationX, double locationY):void
     + getLocationX():int
     + getLocationY():int
+    + getSpeedX():int
     + getSpeedY():int
     + getImage():BufferedImage
     + getWidth():int

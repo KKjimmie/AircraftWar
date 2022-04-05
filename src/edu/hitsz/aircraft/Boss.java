@@ -59,5 +59,6 @@ public class Boss extends AbstractAircraft {
             case 1 : return bombPropFactory.produceProp(this.locationX, this.locationY, 10, 5);
             case 2 : return bulletPropFactory.produceProp(this.locationX, this.locationY, 10, 5);
             default: return null;
-        }    }
+        }
+    }
 }
