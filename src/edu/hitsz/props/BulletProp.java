@@ -1,6 +1,7 @@
 package edu.hitsz.props;
 
 import edu.hitsz.aircraft.HeroAircraft;
+import edu.hitsz.shootStrategy.ScatteredShoot;
 
 /**
  * 子弹道具类，用于加强英雄机子弹
@@ -17,7 +18,11 @@ public class BulletProp extends AbstractProp{
 
     @Override
     public void work (HeroAircraft heroAircraft){
-        heroAircraft.setShootNum(bulletNumAdd);
+        if(heroAircraft.getShootNum() < heroAircraft.getMaxShootNum()) {
+            heroAircraft.setShootNum(bulletNumAdd);
+        }else{
+            heroAircraft.setStrategy(new ScatteredShoot());
+        }
         System.out.println(this.message);
     }
 }

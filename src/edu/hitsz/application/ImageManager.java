@@ -12,7 +12,6 @@ import edu.hitsz.props.BombProp;
 import edu.hitsz.props.BulletProp;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;

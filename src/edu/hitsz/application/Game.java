@@ -8,10 +8,18 @@ import edu.hitsz.factory.EliteEnemyFactory;
 import edu.hitsz.factory.MobEnemyFactory;
 import edu.hitsz.props.AbstractProp;
 import edu.hitsz.props.BombProp;
+import edu.hitsz.rank.RankDaoImpl;
+import edu.hitsz.rank.RankLine;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.*;
@@ -48,11 +56,12 @@ public class Game extends JPanel {
     private final EliteEnemyFactory eliteEnemyFactory = new EliteEnemyFactory();
     private final BossFactory bossFactory = new BossFactory();
 
+    private final RankDaoImpl rankDaoImpl = new RankDaoImpl();
+
     private int enemyMaxNumber = 5;
 
     private boolean gameOverFlag = false;
     private boolean bossExistFlag = false; // 标志Boss是否存在
-    private int bossLevel = 1; // Boss等级
     private int score = 0;
     private int time = 0;
     /**
@@ -63,10 +72,7 @@ public class Game extends JPanel {
     private int cycleTime = 0;
 
     public Game() {
-        heroAircraft = HeroAircraft.getInstance(
-                Main.WINDOW_WIDTH / 2,
-                Main.WINDOW_HEIGHT - ImageManager.HERO_IMAGE.getHeight() ,
-                0, 0, 100);
+        heroAircraft = HeroAircraft.getInstance();
 
         enemyAircrafts = new LinkedList<>();
         heroBullets = new LinkedList<>();
@@ -120,12 +126,11 @@ public class Game extends JPanel {
             //每个时刻重绘界面
             repaint();
 
-            // 游戏结束检查
-            if (heroAircraft.getHp() <= 0) {
-                // 游戏结束
-                executorService.shutdown();
-                gameOverFlag = true;
-                System.out.println("Game Over!");
+            // 游戏结束检查以及打印排行榜
+            try {
+                isGameOver();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
         };
@@ -157,44 +162,27 @@ public class Game extends JPanel {
      * 产生敌机
      */
     private void produceEnemy() {
-        if (enemyAircrafts.size() < enemyMaxNumber) {
+        if (enemyAircrafts.size() < enemyMaxNumber && !bossExistFlag) {
             // 隔一定的时间周期，产生精英敌机
             if (time % (15 * cycleDuration) == 0){
-                enemyAircrafts.add(eliteEnemyFactory.produceEnemy(
-                        (int) (Math.random() * (Main.WINDOW_WIDTH - ImageManager.ELITE_ENEMY_IMAGE.getWidth())),
-                        (int) (Math.random() * Main.WINDOW_HEIGHT * 0.2),
-                        10,
-                        3,
-                        60
-                ));
+                enemyAircrafts.add(eliteEnemyFactory.produceEnemy());
             }else {
-                enemyAircrafts.add(mobEnemyFactory.produceEnemy(
-                        (int) (Math.random() * (Main.WINDOW_WIDTH - ImageManager.MOB_ENEMY_IMAGE.getWidth())),
-                        (int) (Math.random() * Main.WINDOW_HEIGHT * 0.2),
-                        0,
-                        10,
-                        30
-                ));
+                enemyAircrafts.add(mobEnemyFactory.produceEnemy());
             }
         }
     }
 
+    /**
+     * 检查是否达到产生Boss条件
+     */
     private void gotoBoss() {
-        if (! bossExistFlag && score >= 2000 * bossLevel){
-            enemyAircrafts.add(bossFactory.produceEnemy(
-                    (int) (Math.random() * (Main.WINDOW_WIDTH - ImageManager.BOSS_IMAGE.getWidth())),
-                    (int) (Math.random() * Main.WINDOW_WIDTH * 0.1),
-                    5,
-                    0,
-                    600 * bossLevel
-            ));
-            bossLevel ++;
+        if (! bossExistFlag && score >= Settings.scoreToBoss * bossFactory.getBossLevel()){
+            enemyAircrafts.add(bossFactory.produceEnemy());
             bossExistFlag = true;
         }
     }
 
     private void shootAction() {
-        // TODO 敌机射击
         for(var enemyAircraft : enemyAircrafts){
             if (enemyAircraft instanceof EliteEnemy || enemyAircraft instanceof Boss){
                 enemyBullets.addAll(enemyAircraft.shoot());
@@ -234,7 +222,6 @@ public class Game extends JPanel {
      * 3. 英雄获得补给
      */
     private void crashCheckAction() {
-        // TODO 敌机子弹攻击英雄
         for (BaseBullet bullet : enemyBullets) {
             if (bullet.notValid()) {
                 continue;
@@ -262,7 +249,6 @@ public class Game extends JPanel {
                     enemyAircraft.decreaseHp(bullet.getPower());
                     bullet.vanish();
                     if (enemyAircraft.notValid()) {
-                        // TODO 获得分数，产生道具补给
                         if (enemyAircraft instanceof EliteEnemy){
                             AbstractProp prop = ((EliteEnemy) enemyAircraft).genProp();
                             if (prop != null){
@@ -289,7 +275,6 @@ public class Game extends JPanel {
             }
         }
 
-        // Todo: 我方获得道具，道具生效
         for (AbstractProp prop : props) {
             if (prop.notValid()){
                 continue;
@@ -298,13 +283,51 @@ public class Game extends JPanel {
                 score += 10; // 吃到道具加分
                 if (prop instanceof BombProp){
                     ((BombProp) prop).boom(enemyAircrafts, enemyBullets);
-                    score += 30; // 爆炸道具会使除Boss外的敌机以及子弹消失，这里加30分
+                    score += 50; // 爆炸道具会使除Boss外的敌机以及子弹消失，这里加50分
                 }
                 prop.work(heroAircraft);
                 prop.vanish();
             }
         }
 
+    }
+
+    /**
+     * 游戏结束检查以及打印排行榜
+     */
+    private void isGameOver() throws IOException {
+        if (heroAircraft.getHp() <= 0) {
+            // 游戏结束
+            executorService.shutdown();
+            gameOverFlag = true;
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm");
+            String currentTime = formatter.format(LocalDateTime.now());
+            RankLine rankList = new RankLine("testUserName", score, currentTime);
+            rankDaoImpl.add(rankList);
+            printRankings();
+            System.out.println("Game Over!");
+        }
+    }
+
+    /**
+     * 打印排行榜
+     * @throws IOException
+     */
+    private void printRankings () throws IOException {
+        System.out.println("************************************");
+        System.out.println("              得分排行榜              ");
+        System.out.println("************************************");
+        File file = new File("src/data/rank");
+        FileReader fr = new FileReader(file);
+        BufferedReader br = new BufferedReader(fr);
+        String line;
+        int i = 1;
+        while((line = br.readLine()) != null){
+            System.out.println("第" + i + "名 :" + line);
+            i ++;
+        }
+        System.out.println("************************************");
+        br.close();
     }
 
     /**

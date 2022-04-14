@@ -1,0 +1,49 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+class Game
+interface Comparable
+
+interface RankDao
+{
+    findByName(String name) throws IOException:void
+    findTop() throws IOException:void
+    getAllRankLists() throws IOException:List<RankLine>
+    add(RankLine rankLine)) throws IOException:void
+    deleteByName(String name) throws IOException:void
+    sort() throws IOException:void
+}
+
+class RankDaoImpl
+{
+    + RankDaoImpl()
+    + findByName(String name) throws IOException:void
+    + findTop() throws IOException:void
+    + getAllRankLists() throws IOException:List<RankLine>
+    + add(RankLine rankLine) throws IOException:void
+    + deleteByName(String name) throws IOException:void
+    + sort() throws IOException:void
+}
+
+class RankLine
+{
+    - String name
+    - int score
+    - String time
+    + RankLine(String name, inr score, String time)
+    + getScore():int
+    + setScore(int score):void
+    + getName():String
+    + setName(String name):void
+    + getTime():String
+    + setTime(String time)void
+    + toString():String
+    + compareTo(RankLine o):int
+}
+
+RankDao <|.. RankDaoImpl
+RankLine <-- RankDaoImpl
+RankDao <.. Game
+Comparable <|.. RankLine
+
+@enduml

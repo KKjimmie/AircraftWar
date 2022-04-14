@@ -57,7 +57,7 @@ class BombPropTest {
     @DisplayName("BombProp Crash Test")
     @Test
     void crash(){
-        HeroAircraft heroAircraft = HeroAircraft.getInstance(0, 0, 0, 0, 10);
+        HeroAircraft heroAircraft = HeroAircraft.getInstance();
         assertEquals(true, heroAircraft.crash(bombProp), "Crash Test Fail!");
     }
 }

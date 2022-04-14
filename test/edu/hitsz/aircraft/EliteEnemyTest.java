@@ -1,7 +1,6 @@
 package edu.hitsz.aircraft;
 
 import edu.hitsz.bullet.BaseBullet;
-import edu.hitsz.props.AbstractProp;
 import org.junit.jupiter.api.*;
 
 import java.util.LinkedList;

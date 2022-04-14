@@ -1,5 +1,6 @@
 package edu.hitsz.factory;
 
+import edu.hitsz.application.Settings;
 import edu.hitsz.props.AbstractProp;
 import edu.hitsz.props.BombProp;
 
@@ -9,7 +10,9 @@ import edu.hitsz.props.BombProp;
  */
 public class BombPropFactory implements ProduceProp {
     @Override
-    public AbstractProp produceProp(int locationX, int locationY, int speedX, int speedY) {
+    public AbstractProp produceProp(int locationX, int locationY) {
+        int speedX = Settings.propSpeedX;
+        int speedY = Settings.propSpeedY;
         return new BombProp(locationX, locationY, speedX, speedY);
     }
 }

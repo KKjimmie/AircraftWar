@@ -23,7 +23,7 @@ class AbstractFlyingObjectTest {
 
     @BeforeEach
     void setUp(){
-        heroAircraft = HeroAircraft.getInstance(0, 0, 0, 0, 10);
+        heroAircraft = HeroAircraft.getInstance(0,0,0,0,10);
         mobEnemy = new MobEnemy(0, 0, 0, 0, 10);
     }
 

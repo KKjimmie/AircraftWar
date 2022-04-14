@@ -37,19 +37,23 @@ class Boss {
 }
 
 interface produceEmeny{
-    produceEnemy(int locationX, int locationY, int speedX, int speedY, int hp):AbstractAircraft
+    produceEnemy():AbstractAircraft
 }
 
 class MobEnemyFactory{
-    + produceEnemy(int locationX, int locationY, int speedX, int speedY, int hp):AbstractAircraft
+    + produceEnemy():AbstractAircraft
 }
 
 class EliteEnemyFactory{
-    + produceEnemy(int locationX, int locationY, int speedX, int speedY, int hp):AbstractAircraft
+    + produceEnemy():AbstractAircraft
 }
 
 class BossFactory{
-    + produceEnemy(int locationX, int locationY, int speedX, int speedY, int hp):AbstractAircraft
+    - int bossLevel
+    - bossLevelUp():void
+    - getBossLevel():int
+    - setBossLevel():void
+    + produceEnemy():AbstractAircraft
 }
 
 AbstractAircraft <|-- MobEnemy

@@ -30,10 +30,12 @@ abstract class AbstractAircraft
 {
 	# int maxHp
     # int hp
+    # ShootStrategy strategy
     + AbstractAircraft(int locationX, int locationY, int speedX, int speedY, int hp)
     + decreaseHp(int decrease):void
     + getHp():int
     + getMaxHp:int
+    + setStrategy(ShootStrategy strategy):void
     + shoot():List<BaseBullet>
  }
 

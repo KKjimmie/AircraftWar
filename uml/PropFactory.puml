@@ -30,19 +30,19 @@ class BulletProp{
 }
 
 interface ProduceProp{
-    produceProp(int locationX, int locationY, int speedX, int speedY):AbstractProp
+    produceProp(int locationX, int locationY):AbstractProp
 }
 
 class BloodPropFactory{
-    + produceProp(int locationX, int locationY, int speedX, int speedY):AbstractProp
+    + produceProp(int locationX, int locationY):AbstractProp
 }
 
 class BombPropFactory{
-    + produceProp(int locationX, int locationY, int speedX, int speedY):AbstractProp
+    + produceProp(int locationX, int locationY):AbstractProp
 }
 
 class BulletPropFactory{
-    + produceProp(int locationX, int locationY, int speedX, int speedY):AbstractProp
+    + produceProp(int locationX, int locationY):AbstractProp
 }
 
 AbstractProp <|-- BloodProp

@@ -15,5 +15,5 @@ public interface ProduceProp {
      * @param speedY y速度
      * @return AbstractProp
      */
-    AbstractProp produceProp(int locationX, int locationY, int speedX, int speedY);
+    AbstractProp produceProp(int locationX, int locationY);
 }

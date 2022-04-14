@@ -1,0 +1,33 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+interface ShootStrategy{
+    shootMode(boolean isHero, int locationX, int locationY, int direction, int power, int shootNum):List<BaseBullet>
+}
+
+class DirectShoot{
+    + shootMode(boolean isHero, int locationX, int locationY, int direction, int power, int shootNum):List<BaseBullet>
+}
+
+class ScatteredShoot{
+    + shootMode(boolean isHero, int locationX, int locationY, int direction, int power, int shootNum):List<BaseBullet>
+}
+
+abstract class AbstractAircraft
+{
+	# int maxHp
+    # int hp
+    # ShootStrategy strategy
+    + AbstractAircraft(int locationX, int locationY, int speedX, int speedY, int hp)
+    + decreaseHp(int decrease):void
+    + getHp():int
+    + getMaxHp:int
+    + setStrategy(ShootStrategy strategy):void
+    + shoot():List<BaseBullet>
+}
+
+
+ShootStrategy <|.. DirectShoot
+ShootStrategy <|.. ScatteredShoot
+AbstractAircraft o--> ShootStrategy
+@enduml

@@ -1,9 +1,11 @@
 package edu.hitsz.aircraft;
 
+import edu.hitsz.application.ImageManager;
+import edu.hitsz.application.Main;
+import edu.hitsz.application.Settings;
 import edu.hitsz.bullet.BaseBullet;
-import edu.hitsz.bullet.HeroBullet;
+import edu.hitsz.shootStrategy.DirectShoot;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -27,7 +29,7 @@ public class HeroAircraft extends AbstractAircraft {
     /**
      * maxShootNUm 子弹一次最多发射的数量
      */
-    private final int maxShootNum = 5;
+    private final int maxShootNum = 3;
     private volatile static HeroAircraft instance = null;
     /**
      * @param locationX 英雄机位置x坐标
@@ -38,8 +40,24 @@ public class HeroAircraft extends AbstractAircraft {
      */
     private HeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY, hp);
+        this.setStrategy(new DirectShoot());
     }
 
+    public static HeroAircraft getInstance(){
+        if (instance == null) {
+            synchronized (HeroAircraft.class){
+                if (instance == null) {
+                    int locationX = Main.WINDOW_WIDTH / 2;
+                    int locationY = Main.WINDOW_HEIGHT - ImageManager.HERO_IMAGE.getHeight();
+                    int speedX = Settings.heroSpeedX;
+                    int speedY = Settings.heroSpeedY;
+                    int hp = Settings.heroHp;
+                    instance = new HeroAircraft(locationX, locationY, speedX, speedY, hp);
+                }
+            }
+        }
+        return instance;
+    }
     public static HeroAircraft getInstance(int locationX, int locationY, int speedX, int speedY, int hp){
         if (instance == null) {
             synchronized (HeroAircraft.class){
@@ -51,30 +69,22 @@ public class HeroAircraft extends AbstractAircraft {
         return instance;
     }
 
+    public int getShootNum() {
+        return shootNum;
+    }
+
+    public int getMaxShootNum() {
+        return maxShootNum;
+    }
+
     @Override
     public void forward() {
         // 英雄机由鼠标控制，不通过forward函数移动
     }
 
     @Override
-    /**
-     * 通过射击产生子弹
-     * @return 射击出的子弹List
-     */
     public List<BaseBullet> shoot() {
-        List<BaseBullet> res = new LinkedList<>();
-        int x = this.getLocationX();
-        int y = this.getLocationY() + direction*2;
-        int speedX = 0;
-        int speedY = this.getSpeedY() + direction*5;
-        BaseBullet baseBullet;
-        for(int i=0; i<shootNum; i++){
-            // 子弹发射位置相对飞机位置向前偏移
-            // 多个子弹横向分散
-            baseBullet = new HeroBullet(x + (i*2 - shootNum + 1)*10, y, speedX, speedY, power);
-            res.add(baseBullet);
-        }
-        return res;
+        return strategy.shootMode(true, this.locationX, this.locationY, this.direction, this.power, this.shootNum);
     }
 
     public void setShootNum(int num){
