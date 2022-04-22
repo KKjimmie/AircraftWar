@@ -30,9 +30,9 @@ public class BossFactory implements ProduceEnemy {
     public AbstractAircraft produceEnemy() {
         int locationX = (int) (Math.random() * (Main.WINDOW_WIDTH - ImageManager.BOSS_IMAGE.getWidth()));
         int locationY = (int) (Math.random() * Main.WINDOW_WIDTH * 0.1);
-        int speedX = Settings.bossSpeedX;
-        int speedY = Settings.bossSpeedY;
-        int hp = Settings.bossHp * bossLevel;
+        int speedX = Settings.getInstance().bossSpeedX;
+        int speedY = Settings.getInstance().bossSpeedY;
+        int hp = Settings.getInstance().bossHp * bossLevel;
         bossLevelUp();
         return new Boss(locationX, locationY, speedX, speedY, hp);
     }

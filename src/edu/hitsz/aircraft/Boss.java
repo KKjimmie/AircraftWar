@@ -1,5 +1,6 @@
 package edu.hitsz.aircraft;
 
+import edu.hitsz.application.Settings;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.factory.BloodPropFactory;
 import edu.hitsz.factory.BombPropFactory;
@@ -19,7 +20,7 @@ import java.util.Random;
 public class Boss extends AbstractAircraft {
 
     private int shootNum = 3;
-    private int power = 20;
+    private int power = Settings.getInstance().bossPower;
     private int direction = 1;
 
     private final BloodPropFactory bloodPropFactory = new BloodPropFactory();

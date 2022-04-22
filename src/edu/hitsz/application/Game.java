@@ -1,5 +1,6 @@
 package edu.hitsz.application;
 
+import edu.hitsz.UI.Ranking;
 import edu.hitsz.aircraft.*;
 import edu.hitsz.basic.AbstractFlyingObject;
 import edu.hitsz.bullet.BaseBullet;
@@ -94,6 +95,7 @@ public class Game extends JPanel {
 
         // 定时任务：绘制、对象产生、碰撞判定、击毁及结束判定
         Runnable task = () -> {
+            MusicController.setBgm(bossExistFlag);
 
             time += timeInterval;
 
@@ -176,10 +178,11 @@ public class Game extends JPanel {
      * 检查是否达到产生Boss条件
      */
     private void gotoBoss() {
-        if (! bossExistFlag && score >= Settings.scoreToBoss * bossFactory.getBossLevel()){
+        if (! bossExistFlag && score >= Settings.getInstance().scoreToBoss * bossFactory.getBossLevel()){
             enemyAircrafts.add(bossFactory.produceEnemy());
             bossExistFlag = true;
         }
+        MusicController.setBossBgm(bossExistFlag);
     }
 
     private void shootAction() {
@@ -191,6 +194,7 @@ public class Game extends JPanel {
 
         // 英雄射击
         heroBullets.addAll(heroAircraft.shoot());
+//        MusicController.setBulletBgm();
     }
 
     private void bulletsMoveAction() {
@@ -227,6 +231,7 @@ public class Game extends JPanel {
                 continue;
             }
             if (heroAircraft.crash(bullet)) {
+                MusicController.setBulletHitBgm();
                 heroAircraft.decreaseHp(bullet.getPower());
                 bullet.vanish();
             }
@@ -249,6 +254,7 @@ public class Game extends JPanel {
                     enemyAircraft.decreaseHp(bullet.getPower());
                     bullet.vanish();
                     if (enemyAircraft.notValid()) {
+                        MusicController.setBulletHitBgm();
                         if (enemyAircraft instanceof EliteEnemy){
                             AbstractProp prop = ((EliteEnemy) enemyAircraft).genProp();
                             if (prop != null){
@@ -280,12 +286,14 @@ public class Game extends JPanel {
                 continue;
             }
             if (heroAircraft.crash(prop)){
+                MusicController.setGetSupplyBgm();
                 score += 10; // 吃到道具加分
                 if (prop instanceof BombProp){
                     ((BombProp) prop).boom(enemyAircrafts, enemyBullets);
                     score += 50; // 爆炸道具会使除Boss外的敌机以及子弹消失，这里加50分
+                    MusicController.setBombExplosionBgm();
                 }
-                prop.work(heroAircraft);
+                prop.work();
                 prop.vanish();
             }
         }
@@ -300,9 +308,14 @@ public class Game extends JPanel {
             // 游戏结束
             executorService.shutdown();
             gameOverFlag = true;
+            MusicController.setGameOverBgm();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm");
             String currentTime = formatter.format(LocalDateTime.now());
-            RankLine rankList = new RankLine("testUserName", score, currentTime);
+            String userName = JOptionPane.showInputDialog(null,
+                    "游戏结束，你的得分为"+score+".\n请输入名字记录得分：", "输入",
+                    JOptionPane.PLAIN_MESSAGE);
+
+            RankLine rankList = new RankLine(userName, score, currentTime);
             rankDaoImpl.add(rankList);
             printRankings();
             System.out.println("Game Over!");
@@ -314,20 +327,17 @@ public class Game extends JPanel {
      * @throws IOException
      */
     private void printRankings () throws IOException {
-        System.out.println("************************************");
-        System.out.println("              得分排行榜              ");
-        System.out.println("************************************");
-        File file = new File("src/data/rank");
-        FileReader fr = new FileReader(file);
-        BufferedReader br = new BufferedReader(fr);
-        String line;
-        int i = 1;
-        while((line = br.readLine()) != null){
-            System.out.println("第" + i + "名 :" + line);
-            i ++;
-        }
-        System.out.println("************************************");
-        br.close();
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        JFrame rankingFrame = new JFrame("排行榜");
+        rankingFrame.setSize(Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT);
+        rankingFrame.setResizable(false);
+        //设置窗口的大小和位置,居中放置
+        rankingFrame.setBounds(((int) screenSize.getWidth() - Main.WINDOW_WIDTH) / 2, 0,
+                Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT);
+        rankingFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        rankingFrame.add(new Ranking().MainPanel);
+        rankingFrame.setVisible(true);
     }
 
     /**
@@ -362,8 +372,8 @@ public class Game extends JPanel {
         super.paint(g);
 
         // 绘制背景,图片滚动
-        g.drawImage(ImageManager.BACKGROUND_IMAGE, 0, this.backGroundTop - Main.WINDOW_HEIGHT, null);
-        g.drawImage(ImageManager.BACKGROUND_IMAGE, 0, this.backGroundTop, null);
+        g.drawImage(Settings.getInstance().getBackground(), 0, this.backGroundTop - Main.WINDOW_HEIGHT, null);
+        g.drawImage(Settings.getInstance().getBackground(), 0, this.backGroundTop, null);
         this.backGroundTop += 1;
         if (this.backGroundTop == Main.WINDOW_HEIGHT) {
             this.backGroundTop = 0;
@@ -425,7 +435,6 @@ public class Game extends JPanel {
         g.drawString("SCORE:" + this.score, x, y);
         y = y + 20;
         g.drawString("LIFE:" + this.heroAircraft.getHp(), x, y);
-
         if (gameOverFlag) {
             g.drawString("GAME OVER", Main.WINDOW_WIDTH / 2, Main.WINDOW_HEIGHT /2);
             g.drawString("SCORE:" + this.score, Main.WINDOW_WIDTH/2, Main.WINDOW_HEIGHT /2 + 20);

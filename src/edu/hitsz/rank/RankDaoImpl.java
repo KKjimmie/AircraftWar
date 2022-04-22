@@ -1,5 +1,7 @@
 package edu.hitsz.rank;
 
+import edu.hitsz.application.Settings;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,6 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author 柯嘉铭
  */
 public class RankDaoImpl implements RankDao {
+
     public RankDaoImpl() {
     }
 
@@ -21,7 +24,7 @@ public class RankDaoImpl implements RankDao {
         rankLists.forEach(rankList -> {
             if (Objects.equals(rankList.getName(), name)){
                 find.set(true);
-                System.out.println(rankList.toString());
+                System.out.println(rankList);
             }
         });
         if(!find.get()) {
@@ -39,8 +42,9 @@ public class RankDaoImpl implements RankDao {
 
     @Override
     public List<RankLine> getAllRankLists() throws IOException {
+        String path = "src/data/" + Settings.getInstance().getDiff() + "rank";
         List<RankLine> rankLists = new ArrayList<>();
-        File file = new File("src/data/rank");
+        File file = new File(path);
         if(! file.exists()){
             return null;
         }
@@ -62,7 +66,8 @@ public class RankDaoImpl implements RankDao {
 
     @Override
     public void add(RankLine rankList) throws IOException {
-        File file = new File("src/data/rank");
+        String path = "src/data/" + Settings.getInstance().getDiff() + "rank";
+        File file = new File(path);
         if(! file.exists()){
             file.createNewFile();
         }
@@ -86,13 +91,39 @@ public class RankDaoImpl implements RankDao {
     }
 
     @Override
-    public void deleteByName(String name) throws IOException {
+    public void addAll(List<RankLine> rankLists) throws IOException {
+        for(var rankList: rankLists){
+            add(rankList);
+        }
+    }
+
+    @Override
+    public boolean remove(RankLine rankLine) throws IOException {
+        boolean flag = false;
         List<RankLine> rankLists = getAllRankLists();
-        rankLists.forEach(rankList -> {
-            if (Objects.equals(rankList.getName(), name)){
-                rankLists.remove(rankList);
+        for(int i = 0; i < rankLists.size(); i ++){
+            if (rankLists.get(i).getTime().equals(rankLine.getTime())){
+                rankLists.remove(i);
+                flag = true;
             }
+        }
+        if(flag){
+            rewrite(rankLists);
+        }
+        return flag;
+    }
+
+    @Override
+    public boolean deleteByName(String name) throws IOException {
+        List<RankLine> rankLists = getAllRankLists();
+        boolean flag = rankLists.removeIf(rankList -> {
+            rankList.getName().equals(name);
+            return true;
         });
+        if(flag){
+            rewrite(rankLists);
+        }
+        return flag;
     }
 
     /**
@@ -102,21 +133,48 @@ public class RankDaoImpl implements RankDao {
     public void sort() throws IOException {
         List<RankLine> rankLists = getAllRankLists();
         Collections.sort(rankLists);
-        File file = new File("src/data/rank");
-        BufferedWriter bw = null;
-        bw = new BufferedWriter(new FileWriter(file));
-        BufferedWriter finalBw = bw;
-        rankLists.forEach((rankLine -> {
-            try {
-                finalBw.write(rankLine.toString()+"\n");
-            } catch (IOException e) {
-                e.printStackTrace();
+        rewrite(rankLists);
+    }
+
+    @Override
+    public boolean deleteByTime(String time) throws IOException {
+        boolean flag = false;
+        List<RankLine> rankLists = getAllRankLists();
+        for(int i = 0; i < rankLists.size(); i ++){
+            if(rankLists.get(i).getTime().equals(time)){
+                rankLists.remove(i);
+                flag = true;
             }
+        }
+        if(flag){
+            rewrite(rankLists);
+        }
+        return flag;
+    }
+
+    @Override
+    public void rewrite(List<RankLine> rankLists) throws IOException {
+        String path = "src/data/" + Settings.getInstance().getDiff() + "rank";
+        File file = new File(path);
+        BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+        bw.write("");
+        bw.close();
+        for(var rankList : rankLists) {
             try {
-                finalBw.flush();
-            } catch (IOException e) {
+                bw = new BufferedWriter(new FileWriter(file, true));
+                bw.write(rankList.toString()+"\n");
+                bw.flush();
+            } catch (IOException e){
                 e.printStackTrace();
+            }finally {
+                if (bw != null){
+                    try{
+                        bw.close();
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                }
             }
-        }));
+        }
     }
 }

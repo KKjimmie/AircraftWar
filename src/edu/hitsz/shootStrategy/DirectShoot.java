@@ -1,5 +1,6 @@
 package edu.hitsz.shootStrategy;
 
+import edu.hitsz.application.Settings;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.EnemyBullet;
 import edu.hitsz.bullet.HeroBullet;
@@ -20,7 +21,7 @@ public class DirectShoot implements ShootStrategy {
         int x = locationX;
         int y = locationY + direction*2;
         int speedX = 0;
-        int speedY = direction * 5;
+        int speedY = Settings.getInstance().bulletSpeedY * direction;
         BaseBullet baseBullet;
         for(int i=0; i<shootNum; i++){
             // 子弹发射位置相对飞机位置向前偏移

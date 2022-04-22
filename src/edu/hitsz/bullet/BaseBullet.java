@@ -1,6 +1,7 @@
 package edu.hitsz.bullet;
 
 import edu.hitsz.application.Main;
+import edu.hitsz.application.Settings;
 import edu.hitsz.basic.AbstractFlyingObject;
 
 /**
@@ -11,7 +12,7 @@ import edu.hitsz.basic.AbstractFlyingObject;
  */
 public class BaseBullet extends AbstractFlyingObject {
 
-    private int power = 10;
+    private int power = Settings.getInstance().baseBulletPower;
 
     public BaseBullet(int locationX, int locationY, int speedX, int speedY, int power) {
         super(locationX, locationY, speedX, speedY);

@@ -19,9 +19,9 @@ import java.util.Random;
 public class EliteEnemy extends AbstractAircraft{
 
     /** 攻击方式 */
-    private int power = 10;
+    private int power = Settings.getInstance().eliteEnemyPower;
     private int direction = 1;
-    private int shootNum = 1;
+    private int shootNum = Settings.getInstance().eliteShootNum;
 
     private final BloodPropFactory bloodPropFactory = new BloodPropFactory();
     private final BombPropFactory bombPropFactory = new BombPropFactory();
@@ -48,7 +48,7 @@ public class EliteEnemy extends AbstractAircraft{
     public AbstractProp genProp () {
         var r = new Random();
         double rand = r.nextDouble();
-        if (rand < Settings.propDropRate){
+        if (rand < Settings.getInstance().propDropRate){
             int randProp = r.nextInt(3);
             switch (randProp){
                 case 0 : return bloodPropFactory.produceProp(this.locationX, this.locationY);

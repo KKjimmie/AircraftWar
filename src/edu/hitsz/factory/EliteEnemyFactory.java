@@ -16,9 +16,9 @@ public class EliteEnemyFactory implements ProduceEnemy {
     public AbstractAircraft produceEnemy() {
         int locationX = (int) (Math.random() * (Main.WINDOW_WIDTH - ImageManager.ELITE_ENEMY_IMAGE.getWidth()));
         int locationY = (int) (Math.random() * Main.WINDOW_HEIGHT * 0.2);
-        int speedX = Settings.eliteEnemySpeedX;
-        int speedY = Settings.eliteEnemySpeedY;
-        int hp = Settings.eliteEnemyHp;
+        int speedX = Settings.getInstance().eliteEnemySpeedX;
+        int speedY = Settings.getInstance().eliteEnemySpeedY;
+        int hp = Settings.getInstance().eliteEnemyHp;
         return new EliteEnemy(locationX, locationY, speedX, speedY, hp);
     }
 }

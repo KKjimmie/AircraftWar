@@ -17,11 +17,11 @@ public class HeroAircraft extends AbstractAircraft {
     /**
      * shootNum 子弹一次发射的数量
      */
-    private int shootNum = 1;
+    private int shootNum = Settings.getInstance().initShootNum;
     /**
      * power 子弹伤害
      */
-    private int power = 30;
+    private int power = Settings.getInstance().heroPower;
     /**
      * direction 子弹射击方向 (向上发射：-1，向下发射：1)
      */
@@ -29,7 +29,7 @@ public class HeroAircraft extends AbstractAircraft {
     /**
      * maxShootNUm 子弹一次最多发射的数量
      */
-    private final int maxShootNum = 3;
+    private final int maxShootNum = Settings.getInstance().maxShootNum;
     private volatile static HeroAircraft instance = null;
     /**
      * @param locationX 英雄机位置x坐标
@@ -49,9 +49,9 @@ public class HeroAircraft extends AbstractAircraft {
                 if (instance == null) {
                     int locationX = Main.WINDOW_WIDTH / 2;
                     int locationY = Main.WINDOW_HEIGHT - ImageManager.HERO_IMAGE.getHeight();
-                    int speedX = Settings.heroSpeedX;
-                    int speedY = Settings.heroSpeedY;
-                    int hp = Settings.heroHp;
+                    int speedX = Settings.getInstance().propSpeedX;
+                    int speedY = Settings.getInstance().heroSpeedY;
+                    int hp = Settings.getInstance().heroHp;
                     instance = new HeroAircraft(locationX, locationY, speedX, speedY, hp);
                 }
             }
@@ -87,10 +87,22 @@ public class HeroAircraft extends AbstractAircraft {
         return strategy.shootMode(true, this.locationX, this.locationY, this.direction, this.power, this.shootNum);
     }
 
-    public void setShootNum(int num){
+    public void addShootNum(int num){
         if (this.shootNum <this.maxShootNum && this.shootNum >=1){
             this.shootNum += num;
         }
+    }
+
+    public void setShootNum(int num) {
+        this.shootNum = num;
+    }
+
+    public void resetShootNum(){
+        strategy = new DirectShoot();
+    }
+
+    public void setHeroHp(int hp){
+        this.hp = hp;
     }
 
 }

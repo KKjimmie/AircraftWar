@@ -2,6 +2,7 @@ package edu.hitsz.props;
 
 import edu.hitsz.aircraft.HeroAircraft;
 import edu.hitsz.application.Main;
+import edu.hitsz.application.Settings;
 import edu.hitsz.basic.AbstractFlyingObject;
 
 /**
@@ -11,7 +12,10 @@ import edu.hitsz.basic.AbstractFlyingObject;
 
 public abstract class AbstractProp extends AbstractFlyingObject {
 
-    protected int bounceNum = 2; // 设置道具y轴反弹次数
+    /**
+    设置道具y轴反弹次数
+     */
+    protected int bounceNum = Settings.getInstance().propBounceNum;
 
     public AbstractProp(int locationX, int locationY, int speedX, int speedY) {
         super(locationX, locationY, speedX, speedY);
@@ -21,7 +25,7 @@ public abstract class AbstractProp extends AbstractFlyingObject {
      * 抽象道具作用
      * @param heroAircraft 英雄机
      */
-    public abstract void work(HeroAircraft heroAircraft);
+    public abstract void work();
 
     @Override
     public void forward () {

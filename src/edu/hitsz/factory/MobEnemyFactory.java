@@ -15,9 +15,9 @@ public class MobEnemyFactory implements ProduceEnemy {
     public AbstractAircraft produceEnemy() {
         int locationX = (int) (Math.random() * (Main.WINDOW_WIDTH - ImageManager.MOB_ENEMY_IMAGE.getWidth()));
         int locationY = (int) (Math.random() * Main.WINDOW_HEIGHT * 0.2);
-        int speedX = Settings.mobEnemySpeedX;
-        int speedY = Settings.mobEnemySpeedY;
-        int hp = Settings.mobEnemyHp;
+        int speedX = Settings.getInstance().mobEnemySpeedX;
+        int speedY = Settings.getInstance().mobEnemySpeedY;
+        int hp = Settings.getInstance().mobEnemyHp;
         return new MobEnemy(locationX, locationY, speedX, speedY, hp);
     }
 }

@@ -21,7 +21,7 @@ public class BombProp extends AbstractProp{
     }
 
     @Override
-    public void work(HeroAircraft heroAircraft) {
+    public void work() {
         System.out.println(this.message);
     }
     public void boom(List<AbstractAircraft> enemyAircrafts, List<BaseBullet> enemyBullets){

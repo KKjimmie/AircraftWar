@@ -1,5 +1,6 @@
 package edu.hitsz.shootStrategy;
 
+import edu.hitsz.application.Settings;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.EnemyBullet;
 import edu.hitsz.bullet.HeroBullet;
@@ -20,13 +21,13 @@ public class ScatteredShoot implements ShootStrategy {
         int x = locationX;
         int y = locationY + direction*2;
         int speedX = 1;
-        int speedY = direction * 5;
+        int speedY = Settings.getInstance().bulletSpeedY * direction;
         BaseBullet baseBullet;
         for(int i=0; i<shootNum; i++){
             if(isHero){
                 baseBullet = new HeroBullet(x + (i*2 - shootNum + 1)*10, y,  speedX*(i-1), speedY, power);
             }else{
-                baseBullet = new EnemyBullet(x + (i*2 - shootNum + 1)*50, y,  speedX*(i-1), speedY, power);
+                baseBullet = new EnemyBullet(x + (i*2 - shootNum + 1)*70, y,  speedX*(i-1), speedY, power);
             }
             res.add(baseBullet);
         }

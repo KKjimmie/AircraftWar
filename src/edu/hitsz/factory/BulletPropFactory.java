@@ -11,8 +11,8 @@ import edu.hitsz.props.BulletProp;
 public class BulletPropFactory implements ProduceProp {
     @Override
     public AbstractProp produceProp(int locationX, int locationY) {
-        int speedX = Settings.propSpeedX;
-        int speedY = Settings.propSpeedY;
+        int speedX = Settings.getInstance().propSpeedX;
+        int speedY = Settings.getInstance().propSpeedY;
         return new BulletProp(locationX, locationY, speedX, speedY);
     }
 }

@@ -11,8 +11,8 @@ import edu.hitsz.props.BloodProp;
 public class BloodPropFactory implements ProduceProp {
     @Override
     public AbstractProp produceProp(int locationX, int locationY) {
-        int speedX = Settings.propSpeedX;
-        int speedY = Settings.propSpeedY;
+        int speedX = Settings.getInstance().propSpeedX;
+        int speedY = Settings.getInstance().propSpeedY;
         return new BloodProp(locationX, locationY, speedX, speedY);
     }
 }
