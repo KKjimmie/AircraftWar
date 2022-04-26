@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * 散射
  * @author 柯嘉铭
  */
 public class ScatteredShoot implements ShootStrategy {
@@ -27,7 +28,7 @@ public class ScatteredShoot implements ShootStrategy {
             if(isHero){
                 baseBullet = new HeroBullet(x + (i*2 - shootNum + 1)*10, y,  speedX*(i-1), speedY, power);
             }else{
-                baseBullet = new EnemyBullet(x + (i*2 - shootNum + 1)*70, y,  speedX*(i-1), speedY, power);
+                baseBullet = new EnemyBullet(x + (i*2 - shootNum + 1)*60, y,  speedX*(i-1), speedY, power);
             }
             res.add(baseBullet);
         }

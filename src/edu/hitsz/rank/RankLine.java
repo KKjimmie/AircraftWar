@@ -1,6 +1,7 @@
 package edu.hitsz.rank;
 
 /**
+ * 排行榜数据类
  * @author 柯嘉铭
  */
 public class RankLine implements Comparable<RankLine> {

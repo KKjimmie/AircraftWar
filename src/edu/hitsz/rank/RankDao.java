@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
+ * 数据操作DAO接口
  * @author 柯嘉铭
  */
 public interface RankDao {

@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * 直射
  * @author 柯嘉铭
  */
 public class DirectShoot implements ShootStrategy {

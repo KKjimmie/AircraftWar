@@ -56,8 +56,4 @@ public class Main implements ActionListener {
         gameFrame.setVisible(true);
         game.action();
     }
-
-//    class mainJFrame{
-//
-//    }
 }

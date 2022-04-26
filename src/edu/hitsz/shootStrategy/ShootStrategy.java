@@ -5,6 +5,8 @@ import edu.hitsz.bullet.BaseBullet;
 import java.util.List;
 
 /**
+ * 策略模式实现子弹射击效果
+ * 策略接口
  * @author 柯嘉铭
  */
 public interface ShootStrategy {

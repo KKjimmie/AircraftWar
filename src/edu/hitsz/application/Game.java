@@ -15,9 +15,6 @@ import edu.hitsz.rank.RankLine;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -182,9 +179,13 @@ public class Game extends JPanel {
             enemyAircrafts.add(bossFactory.produceEnemy());
             bossExistFlag = true;
         }
+        // 播放boss音乐
         MusicController.setBossBgm(bossExistFlag);
     }
 
+    /**
+     * 射击
+     */
     private void shootAction() {
         for(var enemyAircraft : enemyAircrafts){
             if (enemyAircraft instanceof EliteEnemy || enemyAircraft instanceof Boss){
@@ -194,9 +195,13 @@ public class Game extends JPanel {
 
         // 英雄射击
         heroBullets.addAll(heroAircraft.shoot());
-//        MusicController.setBulletBgm();
+        // 英雄射击音效
+        MusicController.setBulletBgm();
     }
 
+    /**
+     * 子弹移动
+     */
     private void bulletsMoveAction() {
         for (BaseBullet bullet : heroBullets) {
             bullet.forward();
@@ -206,12 +211,18 @@ public class Game extends JPanel {
         }
     }
 
+    /**
+     * 飞机移动
+     */
     private void aircraftsMoveAction() {
         for (AbstractAircraft enemyAircraft : enemyAircrafts) {
             enemyAircraft.forward();
         }
     }
 
+    /**
+     * 道具移动
+     */
     private void propsMoveAction() {
         for (AbstractProp prop : props){
             prop.forward();
@@ -249,12 +260,13 @@ public class Game extends JPanel {
                     continue;
                 }
                 if (enemyAircraft.crash(bullet)) {
+                    // 播放音乐
+                    MusicController.setBulletHitBgm();
                     // 敌机撞击到英雄机子弹
                     // 敌机损失一定生命值
                     enemyAircraft.decreaseHp(bullet.getPower());
                     bullet.vanish();
                     if (enemyAircraft.notValid()) {
-                        MusicController.setBulletHitBgm();
                         if (enemyAircraft instanceof EliteEnemy){
                             AbstractProp prop = ((EliteEnemy) enemyAircraft).genProp();
                             if (prop != null){
@@ -286,11 +298,15 @@ public class Game extends JPanel {
                 continue;
             }
             if (heroAircraft.crash(prop)){
+                // 播放吃到道具音效
                 MusicController.setGetSupplyBgm();
-                score += 10; // 吃到道具加分
+                // 吃到道具加分
+                score += 10;
                 if (prop instanceof BombProp){
                     ((BombProp) prop).boom(enemyAircrafts, enemyBullets);
-                    score += 50; // 爆炸道具会使除Boss外的敌机以及子弹消失，这里加50分
+                    // 爆炸道具会使除Boss外的敌机以及子弹消失，这里加50分
+                    score += 50;
+                    // 播放爆炸音效
                     MusicController.setBombExplosionBgm();
                 }
                 prop.work();
@@ -310,11 +326,14 @@ public class Game extends JPanel {
             gameOverFlag = true;
             MusicController.setGameOverBgm();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm");
+            // 弹窗输入姓名
             String currentTime = formatter.format(LocalDateTime.now());
             String userName = JOptionPane.showInputDialog(null,
                     "游戏结束，你的得分为"+score+".\n请输入名字记录得分：", "输入",
                     JOptionPane.PLAIN_MESSAGE);
-
+            if (userName.strip().equals("")){
+                userName = "unknown user";
+            }
             RankLine rankList = new RankLine(userName, score, currentTime);
             rankDaoImpl.add(rankList);
             printRankings();
@@ -327,6 +346,7 @@ public class Game extends JPanel {
      * @throws IOException
      */
     private void printRankings () throws IOException {
+        // 获取屏幕窗口信息
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         JFrame rankingFrame = new JFrame("排行榜");
         rankingFrame.setSize(Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT);
@@ -336,14 +356,14 @@ public class Game extends JPanel {
                 Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT);
         rankingFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        rankingFrame.add(new Ranking().MainPanel);
+        rankingFrame.add(new Ranking().mainPanel);
         rankingFrame.setVisible(true);
     }
 
     /**
      * 后处理：
      * 1. 删除无效的子弹
-     * 2. 删除无效的敌机
+     * 2. 删除无效的敌机----》 移动到paintVanish中执行
      * 3. 删除无效道具
      * 4. 检查英雄机生存
      * <p>

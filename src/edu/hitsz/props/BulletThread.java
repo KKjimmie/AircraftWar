@@ -4,6 +4,7 @@ import edu.hitsz.aircraft.HeroAircraft;
 import edu.hitsz.shootStrategy.ScatteredShoot;
 
 /**
+ * 子弹线程，用于实现子弹散射一定时间，还原为直射
  * @author 柯嘉铭
  */
 public class BulletThread extends Thread{
@@ -12,7 +13,7 @@ public class BulletThread extends Thread{
         synchronized (this){
             HeroAircraft.getInstance().setStrategy(new ScatteredShoot());
             try {
-                wait(5000);
+                wait(10 * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
