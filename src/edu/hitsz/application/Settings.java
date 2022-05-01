@@ -65,7 +65,8 @@ public class Settings {
     public int eliteEnemyPower = 10;
     public int eliteShootNum = 1;
     public final int maxEliteShootNum = 3;
-    public final int maxEliteSpeedY = 10;
+    public final int maxEliteSpeedY = 8;
+    public final int maxEliteSpeedX = 10;
 
     /*
      * Boss机设置

@@ -1,5 +1,6 @@
 package edu.hitsz.props;
 
+import edu.hitsz.application.MusicController;
 import edu.hitsz.basic.CanBoom;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,5 +34,7 @@ public class BombProp extends AbstractProp{
     @Override
     public void work() {
         notifyAllToBoom();
+        // 播放爆炸音效
+        MusicController.setBombExplosionBgm();
     }
 }

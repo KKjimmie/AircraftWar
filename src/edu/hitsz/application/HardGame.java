@@ -67,38 +67,51 @@ public class HardGame extends Game{
 
     @Override
     protected void difficultyLevelUp() {
+        boolean printFalg = false;
         if(! bossExistFlag && time % Settings.getInstance().timeToGameLevelUp == 0 && time > 0){
             if(Settings.getInstance().timeToElite > 5 * Settings.getInstance().cycleDuration){
                 Settings.getInstance().timeToElite -= (int )(1.5 * cycleDuration);
                 System.out.println("精英机产生周期缩短！");
+                printFalg = true;
             }
-            if(Settings.getInstance().eliteEnemySpeedY <= Settings.getInstance().maxEliteSpeedY){
+            if(Settings.getInstance().eliteEnemySpeedX < Settings.getInstance().maxEliteSpeedX){
                 System.out.println("精英机速度提升！");
-                Settings.getInstance().eliteEnemySpeedY ++;
                 Settings.getInstance().eliteEnemySpeedX ++;
+                printFalg = true;
+            }
+            if(Settings.getInstance().eliteEnemySpeedY < Settings.getInstance().maxEliteSpeedY){
+                Settings.getInstance().eliteEnemySpeedY ++;
+                printFalg = true;
             }
             if(Settings.getInstance().mobEnemySpeedY <= Settings.getInstance().maxMobSpeedY){
                 System.out.println("普通敌机速度提升！");
                 Settings.getInstance().mobEnemySpeedY ++;
+                printFalg = true;
             }
             if(time % (5 *Settings.getInstance().timeToGameLevelUp) == 0){
                 if(Settings.getInstance().eliteEnemyHp <= Settings.getInstance().maxEliteHp){
                     System.out.println("精英机血量提升！");
                     Settings.getInstance().eliteEnemyHp += 10;
+                    printFalg = true;
                 }
                 if(Settings.getInstance().eliteShootNum < Settings.getInstance().maxEliteShootNum){
                     System.out.println("精英机子弹数目提升！");
                     Settings.getInstance().eliteShootNum ++;
+                    printFalg = true;
                 }
                 if(Settings.getInstance().eliteEnemyPower < 40){
                     System.out.println("精英机子弹伤害提升！");
                     Settings.getInstance().eliteEnemyPower += 10;
+                    printFalg = true;
                 }
                 if(Settings.getInstance().propDropRate > 0.2){
                     Settings.getInstance().propDropRate -= 0.05;
+                    printFalg = true;
                 }
             }
+            if(printFalg){
             System.out.println("---------------------------------------");
+            }
         }
     }
 }

@@ -17,7 +17,7 @@ public class BloodProp extends AbstractProp {
 
     @Override
     public void work() {
-        if (HeroAircraft.getInstance().getHp() <= (HeroAircraft.getInstance().getMaxHp() - this.plusHp)) {
+        if (HeroAircraft.getInstance().getHp() < HeroAircraft.getInstance().getMaxHp()) {
             HeroAircraft.getInstance().decreaseHp(- plusHp);
         }
     }

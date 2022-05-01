@@ -339,8 +339,6 @@ public abstract class Game extends JPanel {
                     for(var enemyBullet : enemyBullets){
                         ((BombProp) prop).addCanBoom((CanBoom) enemyBullet);
                     }
-                    // 播放爆炸音效
-                    MusicController.setBombExplosionBgm();
                 }
                 prop.work();
                 prop.vanish();
@@ -362,11 +360,11 @@ public abstract class Game extends JPanel {
             String currentTime = formatter.format(LocalDateTime.now());
             String userName = JOptionPane.showInputDialog(null,
                     "游戏结束，你的得分为"+score+".\n请输入名字记录得分：", "输入",
-                    JOptionPane.PLAIN_MESSAGE).strip();
+                    JOptionPane.PLAIN_MESSAGE);
             if ("".equals(userName) || userName == null){
                 userName = "unknown user";
             }
-            RankLine rankList = new RankLine(userName, score, currentTime);
+            RankLine rankList = new RankLine(userName.strip(), score, currentTime);
             rankDaoImpl.add(rankList);
             printRankings();
             System.out.println("Game Over!");
@@ -486,10 +484,6 @@ public abstract class Game extends JPanel {
         g.drawString("SCORE:" + this.score, x, y);
         y = y + 20;
         g.drawString("LIFE:" + this.heroAircraft.getHp(), x, y);
-        if (gameOverFlag) {
-            g.drawString("GAME OVER", MainFrame.WINDOW_WIDTH / 2, MainFrame.WINDOW_HEIGHT /2);
-            g.drawString("SCORE:" + this.score, MainFrame.WINDOW_WIDTH/2, MainFrame.WINDOW_HEIGHT /2 + 20);
-        }
     }
 
 }

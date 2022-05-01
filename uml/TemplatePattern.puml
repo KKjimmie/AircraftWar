@@ -25,6 +25,7 @@ abstract class Game{
     + Game()
     + action() : void
     # {abstract} initGameMode() : void
+    # {abstract} changeBackground() : void
     # {abstract} difficultyLevelUp() : void
     - timeCountAndNewCycleJudge() : boolean
     - produceEnemy() : void
@@ -45,18 +46,21 @@ abstract class Game{
 class EasyGame{
     + EasyGame()
     # initGameMode() : void
+    # changeBackground() : void
     # difficultyLevelUp() : void
 }
 
 class CommonGame{
     + EasyGame()
     # initGameMode() : void
+    # changeBackground() : void
     # difficultyLevelUp() : void
 }
 
 class HardGame{
     + EasyGame()
     # initGameMode() : void
+    # changeBackground() : voidSS
     # difficultyLevelUp() : void
 }
 

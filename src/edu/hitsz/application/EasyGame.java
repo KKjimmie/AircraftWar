@@ -1,5 +1,9 @@
 package edu.hitsz.application;
 
+/**
+ * 简单难度
+ * @author 柯嘉铭
+ */
 public class EasyGame extends Game{
 
     public EasyGame() {

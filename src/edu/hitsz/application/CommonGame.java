@@ -68,8 +68,8 @@ public class CommonGame extends Game{
             if(!bossExistFlag && Settings.getInstance().mobEnemySpeedY < Settings.getInstance().maxMobSpeedY){
                 System.out.println("普通敌机速度提升！");
                 Settings.getInstance().mobEnemySpeedY ++;
+                System.out.println("------------------------------");
             }
-            System.out.println("------------------------------");
         }
     }
 }
