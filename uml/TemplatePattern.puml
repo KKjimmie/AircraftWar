@@ -1,0 +1,68 @@
+@startuml
+class MainFrame
+
+abstract class Game{
+    # int backGroundTop = 0
+    # ScheduledExecutorService executorService
+    # int timeInterval
+    # HeroAircraft heroAircraft;
+    # List<AbstractAircraft> enemyAircrafts
+    # List<BaseBullet> heroBullets
+    # List<BaseBullet> enemyBullets
+    # List<AbstractProp> props
+    # MobEnemyFactory mobEnemyFactory
+    # EliteEnemyFactory eliteEnemyFactory
+    # BossFactory bossFactory
+    # RankDaoImpl rankDaoImpl
+    # int enemyMaxNumber
+    # boolean gameOverFlag
+    # boolean bossExistFlag
+    # int score
+    # int time
+    # int cycleDuration
+    # int cycleTime
+
+    + Game()
+    + action() : void
+    # {abstract} initGameMode() : void
+    # {abstract} difficultyLevelUp() : void
+    - timeCountAndNewCycleJudge() : boolean
+    - produceEnemy() : void
+    - gotoBoss() : void
+    - shootAction() : void
+    - bulletsMoveAction() : void
+    - aircraftsMoveAction() : void
+    - propsMoveAction() : void
+    - crashCheckAction() : void
+    - printRankings() : void
+    - postProcessAction() : void
+    + paint(Graphics g) : void
+    - paintVanish(Graphics g) : void
+    - paintImageWithPositionRevised(Graphics g, List<? extends AbstractFlyingObject> objects) : void
+    - paintScoreAndLife(Graphics g) : void
+}
+
+class EasyGame{
+    + EasyGame()
+    # initGameMode() : void
+    # difficultyLevelUp() : void
+}
+
+class CommonGame{
+    + EasyGame()
+    # initGameMode() : void
+    # difficultyLevelUp() : void
+}
+
+class HardGame{
+    + EasyGame()
+    # initGameMode() : void
+    # difficultyLevelUp() : void
+}
+
+
+MainFrame ..> Game
+Game <|-- EasyGame
+Game <|-- CommonGame
+Game <|-- HardGame
+@enduml

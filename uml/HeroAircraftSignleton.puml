@@ -6,15 +6,24 @@ class HeroAircraft {
     - int shootNum
     - int power
     - int direction
-    - {static}HeroAircraft instance
-    - HeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp)
-    + {static}getInstance():HeroAircraft
+    - int maxShootMun
+    - int maxHeroHp
+    - {static} instance
+    + HeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp)
+    + {static} getInstance():HeroAircraft
+    + {static} HeroAircraft getInstance(int locationX, int locationY, int speedX, int speedY, int hp):HeroAircraft
+    + getShootNum():int
+    + getMaxShootNum():int
     + forward():void
     + shoot():List<BaseBullet>
     + setShootNum(int num):void
+    + resetShootNum():void
+    + setHeroHp():void
+    + decreaseShootNum():void
 }
 
+abstract class Game
 
 HeroAircraft <-- HeroAircraft
-
+Game ..> HeroAircraft
 @enduml

@@ -1,5 +1,6 @@
 package edu.hitsz.application;
 
+import edu.hitsz.UI.MainFrame;
 import edu.hitsz.aircraft.HeroAircraft;
 
 import java.awt.event.MouseAdapter;
@@ -26,7 +27,7 @@ public class HeroController {
                 super.mouseDragged(e);
                 int x = e.getX();
                 int y = e.getY();
-                if ( x<0 || x>Main.WINDOW_WIDTH || y<0 || y>Main.WINDOW_HEIGHT){
+                if ( x<0 || x> MainFrame.WINDOW_WIDTH || y<0 || y>MainFrame.WINDOW_HEIGHT){
                     // 防止超出边界
                     return;
                 }

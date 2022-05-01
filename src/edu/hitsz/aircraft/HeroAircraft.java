@@ -1,7 +1,7 @@
 package edu.hitsz.aircraft;
 
+import edu.hitsz.UI.MainFrame;
 import edu.hitsz.application.ImageManager;
-import edu.hitsz.application.Main;
 import edu.hitsz.application.Settings;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.shootStrategy.DirectShoot;
@@ -30,6 +30,11 @@ public class HeroAircraft extends AbstractAircraft {
      * maxShootNUm 子弹一次最多发射的数量
      */
     private final int maxShootNum = Settings.getInstance().maxShootNum;
+
+    /**
+     * maxHeroHp 英雄机最大血量
+     */
+    private final int maxHeroHp = Settings.getInstance().maxHeroHp;
     private volatile static HeroAircraft instance = null;
     /**
      * @param locationX 英雄机位置x坐标
@@ -47,8 +52,8 @@ public class HeroAircraft extends AbstractAircraft {
         if (instance == null) {
             synchronized (HeroAircraft.class){
                 if (instance == null) {
-                    int locationX = Main.WINDOW_WIDTH / 2;
-                    int locationY = Main.WINDOW_HEIGHT - ImageManager.HERO_IMAGE.getHeight();
+                    int locationX = MainFrame.WINDOW_WIDTH / 2;
+                    int locationY = MainFrame.WINDOW_HEIGHT - ImageManager.HERO_IMAGE.getHeight();
                     int speedX = Settings.getInstance().propSpeedX;
                     int speedY = Settings.getInstance().heroSpeedY;
                     int hp = Settings.getInstance().heroHp;
@@ -103,6 +108,10 @@ public class HeroAircraft extends AbstractAircraft {
 
     public void setHeroHp(int hp){
         this.hp = hp;
+    }
+
+    public void decreaseShootNum() {
+        shootNum --;
     }
 
 }

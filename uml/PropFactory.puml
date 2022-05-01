@@ -12,21 +12,22 @@ abstract class AbstractProp
 class BloodProp {
     - int plusHp
     + BloodProp(int locationX, int locationY, int speedX, int speedY)
-    + work(HeroAircraft heroAircraft):void
+    + work():void
 }
 
-class BombProp {
-    - String message
+class BombProp{
+    - List<CanBoom> canBoomList
     + BombProp(int locationX, int locationY, int speedX, int speedY)
-    + work(HeroAircraft heroAircraft):void
-    + boom(List<AbstractAircraft> enemyAircrafts):void
+    + addCanBoom(CanBoom canBoom) : void
+    + removeCanBoom(CanBoom canBoom) : void
+    + notifyAllToBoom() : void
+    + work() : void
 }
 
 class BulletProp{
-    - String message
     - int bulletNumAdd
     + BulletProp(int locationX, int locationY, int speedX, int speedY)
-    + work(HeroAircraft heroAircraft):void
+    + work():void
 }
 
 interface ProduceProp{

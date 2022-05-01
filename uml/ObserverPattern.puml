@@ -1,0 +1,49 @@
+@startuml
+
+class BombPropFactory
+
+class BombProp{
+    - List<CanBoom> canBoomList
+    + BombProp(int locationX, int locationY, int speedX, int speedY)
+    + addCanBoom(CanBoom canBoom) : void
+    + removeCanBoom(CanBoom canBoom) : void
+    + notifyAllToBoom() : void
+    + work() : void
+}
+
+interface CanBoom{
+    boom() : void
+}
+
+class EnemyBullet{
+    + EnemyBullet(int locationX, int locationY, int speedX, int speedY, int power)
+    + boom() : void
+}
+
+class EliteEnemy {
+    - int power
+    - int direction
+    - BloodPropFactory bloodPropFactory
+    - BombPropFactory bombPropFactory
+    - BulletPropFactory bulletPropFactory
+    + EliteEnemy(int locationX, int locationY, int speedX, int speedY, int hp)
+    + forward():void
+    + shoot():List<BaseBullet>
+    + genProp():AbstractProp
+    + boom():void
+}
+class MobEnemy {
+    + MobEnemy(int locationX, int locationY, int speedX, int speedY, int hp)
+    + forward():void
+    + shoot():List<BaseBullet>
+    + boom():void
+}
+
+BombPropFactory ..> BombProp
+BombProp o--> CanBoom
+CanBoom <|.. EnemyBullet
+CanBoom <|.. EliteEnemy
+CanBoom <|.. MobEnemy
+
+
+@enduml

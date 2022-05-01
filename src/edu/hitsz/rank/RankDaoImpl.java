@@ -167,12 +167,10 @@ public class RankDaoImpl implements RankDao {
             } catch (IOException e){
                 e.printStackTrace();
             }finally {
-                if (bw != null){
-                    try{
-                        bw.close();
-                    }catch (IOException e){
-                        e.printStackTrace();
-                    }
+                try{
+                    bw.close();
+                }catch (IOException e){
+                    e.printStackTrace();
                 }
             }
         }

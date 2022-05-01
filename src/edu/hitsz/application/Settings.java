@@ -1,6 +1,5 @@
 package edu.hitsz.application;
 
-import edu.hitsz.aircraft.HeroAircraft;
 
 import java.awt.image.BufferedImage;
 
@@ -11,6 +10,7 @@ import java.awt.image.BufferedImage;
  * @author 柯嘉铭
  */
 public class Settings {
+
     // 游戏难度常量
     public static final int EASY_MODE = 0;
     public static final int COMMON_MODE = 1;
@@ -23,44 +23,61 @@ public class Settings {
     // 单例
     private volatile static Settings instance = null;
 
-    // 默认设置
+    // 默认游戏模式及音效设置
     private int gameMode = EASY_MODE;
     private boolean isSoundOn = SOUND_ON;
+
+    // 相关设置
+    public int timeInterval = 40;
+    public int enemyMaxNumber = 5;
+    public int cycleDuration = 600;
+    public int timeToElite = 15 * cycleDuration;
+    public int timeToGameLevelUp = 20 * cycleDuration;
+
 
     /*
      * 英雄机设置
      */
     public int heroHp = Integer.MAX_VALUE;
+    public int maxHeroHp = Integer.MAX_VALUE;
     public int heroSpeedX = 0;
     public int heroSpeedY = 0;
     public int heroPower = 30;
     public int initShootNum = 3;
     public int maxShootNum = 3;
+    public boolean isDecreaseShootNum = false;
 
     /*
      * 普通敌机设置
      */
     public int mobEnemyHp = 30;
     public int mobEnemySpeedX = 0;
-    public int mobEnemySpeedY = 10;
+    public int mobEnemySpeedY = 5;
+    public final int maxMobSpeedY = 20;
 
     /*
      * 精英敌机设置
      */
     public int eliteEnemyHp = 60;
+    public final int maxEliteHp = 100;
     public int eliteEnemySpeedX = 10;
     public int eliteEnemySpeedY = 3;
     public int eliteEnemyPower = 10;
     public int eliteShootNum = 1;
+    public final int maxEliteShootNum = 3;
+    public final int maxEliteSpeedY = 10;
 
     /*
      * Boss机设置
      */
+    public boolean isLeverUp = false;
+    public double bossHpIncreaseRate = 1.0;
     public int bossHp = 600;
     public int bossSpeedX = 5;
     public int bossSpeedY = 0;
     public int scoreToBoss = 500;
-    public int bossPower = 20;
+    public int bossPower = 10;
+    public final int maxBossPower = 100;
 
     /*
      * 道具设置
@@ -118,45 +135,6 @@ public class Settings {
      */
     public void setGameMode(int gameMode) {
         this.gameMode = gameMode;
-        if (gameMode == COMMON_MODE) {
-            // 英雄机
-            HeroAircraft.getInstance().setHeroHp(2000);
-            HeroAircraft.getInstance().setShootNum(2);
-
-            // 普通敌机
-            mobEnemyHp = 2 * mobEnemyHp;
-//            mobEnemySpeedY = 2 * mobEnemySpeedY;
-
-            // 精英机
-            eliteEnemyHp = 3 * eliteEnemyHp;
-            eliteEnemyPower = 2 * eliteEnemyPower;
-//            eliteEnemySpeedX = 2 * eliteEnemySpeedX;
-            eliteShootNum = 2;
-
-            // Boss
-            bossHp = 2 * bossHp;
-            bossPower = 2 * bossPower;
-            scoreToBoss = 2 * scoreToBoss;
-        }else if (gameMode == HARD_MODE){
-            // 英雄机
-            HeroAircraft.getInstance().setHeroHp(5000);
-            HeroAircraft.getInstance().setShootNum(1);
-
-            // 普通敌机
-            mobEnemyHp = 2 * mobEnemyHp;
-            mobEnemySpeedY = 2 * mobEnemySpeedY;
-
-            // 精英机
-//            eliteEnemyHp = 2 * eliteEnemyHp;
-            eliteEnemyPower = 3 * eliteEnemyPower;
-            eliteEnemySpeedX = 2 * eliteEnemySpeedX;
-            eliteShootNum = 2;
-
-            // Boss
-            bossHp = 3 * bossHp;
-            bossPower = 2 * bossPower;
-            scoreToBoss = 2 * scoreToBoss;
-        }
     }
 
     /**
@@ -178,27 +156,6 @@ public class Settings {
             default: diff = null;
         }
         return diff;
-    }
-
-    /**
-     * 返回背景
-     * @return 背景
-     */
-    public BufferedImage getBackground() {
-        BufferedImage bg = null;
-        switch(gameMode) {
-            case EASY_MODE:
-                bg = ImageManager.BACKGROUND_IMAGE_1;
-                break;
-            case COMMON_MODE:
-                bg = ImageManager.BACKGROUND_IMAGE_2;
-                break;
-            case HARD_MODE:
-                bg = ImageManager.BACKGROUND_IMAGE_3;
-                break;
-            default: bg = ImageManager.BACKGROUND_IMAGE_4;
-        }
-        return bg;
     }
 
     /**

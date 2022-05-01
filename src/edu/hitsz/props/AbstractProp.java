@@ -1,7 +1,6 @@
 package edu.hitsz.props;
 
-import edu.hitsz.aircraft.HeroAircraft;
-import edu.hitsz.application.Main;
+import edu.hitsz.UI.MainFrame;
 import edu.hitsz.application.Settings;
 import edu.hitsz.basic.AbstractFlyingObject;
 
@@ -23,7 +22,6 @@ public abstract class AbstractProp extends AbstractFlyingObject {
 
     /**
      * 抽象道具作用
-     * @param heroAircraft 英雄机
      */
     public abstract void work();
 
@@ -31,12 +29,12 @@ public abstract class AbstractProp extends AbstractFlyingObject {
     public void forward () {
         // 让道具能够反弹
         super.forward();
-        if (bounceNum >= 0 && (locationY <= 0 || locationY >= Main.WINDOW_HEIGHT)) {
+        if (bounceNum >= 0 && (locationY <= 0 || locationY >= MainFrame.WINDOW_HEIGHT)) {
             speedY = -speedY;
             bounceNum --;
         }
         // 没有反弹次数时，道具超出y轴边界消失
-        if (bounceNum < 0 && (locationY <= 0 || locationY >= Main.WINDOW_HEIGHT)) {
+        if (bounceNum < 0 && (locationY <= 0 || locationY >= MainFrame.WINDOW_HEIGHT)) {
             vanish();
         }
 

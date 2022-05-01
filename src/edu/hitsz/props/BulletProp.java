@@ -9,7 +9,6 @@ import edu.hitsz.aircraft.HeroAircraft;
 public class BulletProp extends AbstractProp{
 
     private int bulletNumAdd = 1; //增加子弹数目
-    private String message = "FireSupply active!";
 
     public BulletProp(int locationX, int locationY, int speedX, int speedY) {
         super(locationX, locationY, speedX, speedY);
@@ -22,6 +21,5 @@ public class BulletProp extends AbstractProp{
         }else{
             new BulletThread().start();
         }
-        System.out.println(this.message);
     }
 }

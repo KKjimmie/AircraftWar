@@ -1,9 +1,9 @@
 package edu.hitsz.factory;
 
+import edu.hitsz.UI.MainFrame;
 import edu.hitsz.aircraft.AbstractAircraft;
 import edu.hitsz.aircraft.MobEnemy;
 import edu.hitsz.application.ImageManager;
-import edu.hitsz.application.Main;
 import edu.hitsz.application.Settings;
 
 /**
@@ -13,8 +13,8 @@ import edu.hitsz.application.Settings;
 public class MobEnemyFactory implements ProduceEnemy {
     @Override
     public AbstractAircraft produceEnemy() {
-        int locationX = (int) (Math.random() * (Main.WINDOW_WIDTH - ImageManager.MOB_ENEMY_IMAGE.getWidth()));
-        int locationY = (int) (Math.random() * Main.WINDOW_HEIGHT * 0.2);
+        int locationX = (int) (Math.random() * (MainFrame.WINDOW_WIDTH - ImageManager.MOB_ENEMY_IMAGE.getWidth()));
+        int locationY = (int) (Math.random() * MainFrame.WINDOW_HEIGHT * 0.2);
         int speedX = Settings.getInstance().mobEnemySpeedX;
         int speedY = Settings.getInstance().mobEnemySpeedY;
         int hp = Settings.getInstance().mobEnemyHp;

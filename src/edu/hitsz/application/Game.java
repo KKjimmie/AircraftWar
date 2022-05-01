@@ -1,8 +1,10 @@
 package edu.hitsz.application;
 
+import edu.hitsz.UI.MainFrame;
 import edu.hitsz.UI.Ranking;
 import edu.hitsz.aircraft.*;
 import edu.hitsz.basic.AbstractFlyingObject;
+import edu.hitsz.basic.CanBoom;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.factory.BossFactory;
 import edu.hitsz.factory.EliteEnemyFactory;
@@ -27,51 +29,51 @@ import java.util.concurrent.*;
  *
  * @author hitsz
  */
-public class Game extends JPanel {
+public abstract class Game extends JPanel {
 
-    private int backGroundTop = 0;
+    BufferedImage backGround = null;
+    protected int backGroundTop = 0;
 
     /**
      * Scheduled 线程池，用于任务调度
      */
-    private final ScheduledExecutorService executorService;
+    protected final ScheduledExecutorService executorService;
 
     /**
      * 时间间隔(ms)，控制刷新频率
      */
-    private int timeInterval = 40;
+    protected int timeInterval = Settings.getInstance().timeInterval;
 
-    private final HeroAircraft heroAircraft;
-    private final List<AbstractAircraft> enemyAircrafts;
-    private final List<BaseBullet> heroBullets;
-    private final List<BaseBullet> enemyBullets;
-    private final List<AbstractProp> props;
+    protected final HeroAircraft heroAircraft;
+    protected final List<AbstractAircraft> enemyAircrafts;
+    protected final List<BaseBullet> heroBullets;
+    protected final List<BaseBullet> enemyBullets;
+    protected final List<AbstractProp> props;
 
     /**
      * 创建三个工厂实例
      */
-    private final MobEnemyFactory mobEnemyFactory = new MobEnemyFactory();
-    private final EliteEnemyFactory eliteEnemyFactory = new EliteEnemyFactory();
-    private final BossFactory bossFactory = new BossFactory();
+    protected final MobEnemyFactory mobEnemyFactory = new MobEnemyFactory();
+    protected final EliteEnemyFactory eliteEnemyFactory = new EliteEnemyFactory();
+    protected final BossFactory bossFactory = new BossFactory();
 
-    private final RankDaoImpl rankDaoImpl = new RankDaoImpl();
+    protected final RankDaoImpl rankDaoImpl = new RankDaoImpl();
 
-    private int enemyMaxNumber = 5;
+    protected int enemyMaxNumber = Settings.getInstance().enemyMaxNumber;
 
-    private boolean gameOverFlag = false;
-    private boolean bossExistFlag = false; // 标志Boss是否存在
-    private int score = 0;
-    private int time = 0;
+    protected boolean gameOverFlag = false;
+    protected boolean bossExistFlag = false; // 标志Boss是否存在
+    protected int score = 0;
+    protected int time = 0;
     /**
      * 周期（ms)
      * 指示子弹的发射、敌机的产生频率
      */
-    private int cycleDuration = 600;
-    private int cycleTime = 0;
+    protected int cycleDuration = Settings.getInstance().cycleDuration;
+    protected int cycleTime = 0;
 
     public Game() {
         heroAircraft = HeroAircraft.getInstance();
-
         enemyAircrafts = new LinkedList<>();
         heroBullets = new LinkedList<>();
         enemyBullets = new LinkedList<>();
@@ -82,55 +84,58 @@ public class Game extends JPanel {
 
         //启动英雄机鼠标监听
         new HeroController(this, heroAircraft);
-
     }
 
     /**
      * 游戏启动入口，执行游戏逻辑
      */
-    public void action() {
+    public final void action() {
+
+        initGameMode();
 
         // 定时任务：绘制、对象产生、碰撞判定、击毁及结束判定
         Runnable task = () -> {
             MusicController.setBgm(bossExistFlag);
-
             time += timeInterval;
 
             // 周期性执行（控制频率）
             if (timeCountAndNewCycleJudge()) {
-                System.out.println(time);
                 // 新敌机产生
-                produceEnemy();
+                this.produceEnemy();
                 // 飞机射出子弹
-                shootAction();
+                this.shootAction();
                 // 检查是否达到产生Boss条件并根据条件产生Boss
-                gotoBoss();
+                this.gotoBoss();
+                this.changeBackground();
             }
 
             // 子弹移动
-            bulletsMoveAction();
+            this.bulletsMoveAction();
 
             // 飞机移动
-            aircraftsMoveAction();
+            this.aircraftsMoveAction();
 
             // 道具移动
-            propsMoveAction();
+            this.propsMoveAction();
 
             // 撞击检测
-            crashCheckAction();
+            this.crashCheckAction();
 
             // 后处理
-            postProcessAction();
+            this.postProcessAction();
 
             //每个时刻重绘界面
-            repaint();
+            this.repaint();
 
             // 游戏结束检查以及打印排行榜
             try {
-                isGameOver();
+                this.isGameOver();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            // 难度提升
+            difficultyLevelUp();
 
         };
 
@@ -141,6 +146,21 @@ public class Game extends JPanel {
         executorService.scheduleWithFixedDelay(task, timeInterval, timeInterval, TimeUnit.MILLISECONDS);
 
     }
+
+    /**
+     * 初始化游戏相关参数设置
+     */
+    protected abstract void initGameMode();
+
+    /**
+     * 根据Boss等级修改游戏背景
+     */
+    protected abstract void changeBackground();
+
+    /**
+     * 难度提升
+     */
+    protected abstract void difficultyLevelUp();
 
     //***********************
     //      Action 各部分
@@ -161,11 +181,11 @@ public class Game extends JPanel {
      * 产生敌机
      */
     private void produceEnemy() {
-        if (enemyAircrafts.size() < enemyMaxNumber && !bossExistFlag) {
+        if (!bossExistFlag) {
             // 隔一定的时间周期，产生精英敌机
-            if (time % (15 * cycleDuration) == 0){
+            if (time % Settings.getInstance().timeToElite == 0){
                 enemyAircrafts.add(eliteEnemyFactory.produceEnemy());
-            }else {
+            }else if (enemyAircrafts.size() < enemyMaxNumber){
                 enemyAircrafts.add(mobEnemyFactory.produceEnemy());
             }
         }
@@ -174,7 +194,7 @@ public class Game extends JPanel {
     /**
      * 检查是否达到产生Boss条件
      */
-    private void gotoBoss() {
+    private void gotoBoss(){
         if (! bossExistFlag && score >= Settings.getInstance().scoreToBoss * bossFactory.getBossLevel()){
             enemyAircrafts.add(bossFactory.produceEnemy());
             bossExistFlag = true;
@@ -244,6 +264,9 @@ public class Game extends JPanel {
             if (heroAircraft.crash(bullet)) {
                 MusicController.setBulletHitBgm();
                 heroAircraft.decreaseHp(bullet.getPower());
+                if(Settings.getInstance().isDecreaseShootNum && heroAircraft.getShootNum() > 1){
+                    heroAircraft.decreaseShootNum();
+                }
                 bullet.vanish();
             }
         }
@@ -303,9 +326,19 @@ public class Game extends JPanel {
                 // 吃到道具加分
                 score += 10;
                 if (prop instanceof BombProp){
-                    ((BombProp) prop).boom(enemyAircrafts, enemyBullets);
-                    // 爆炸道具会使除Boss外的敌机以及子弹消失，这里加50分
-                    score += 50;
+                    for(var enemyAircraft : enemyAircrafts){
+                        if (! (enemyAircraft instanceof  Boss)){
+                            ((BombProp) prop).addCanBoom((CanBoom) enemyAircraft);
+                            if (enemyAircraft instanceof EliteEnemy){
+                                score += 20;
+                            }else {
+                                score += 10;
+                            }
+                        }
+                    }
+                    for(var enemyBullet : enemyBullets){
+                        ((BombProp) prop).addCanBoom((CanBoom) enemyBullet);
+                    }
                     // 播放爆炸音效
                     MusicController.setBombExplosionBgm();
                 }
@@ -313,7 +346,6 @@ public class Game extends JPanel {
                 prop.vanish();
             }
         }
-
     }
 
     /**
@@ -330,8 +362,8 @@ public class Game extends JPanel {
             String currentTime = formatter.format(LocalDateTime.now());
             String userName = JOptionPane.showInputDialog(null,
                     "游戏结束，你的得分为"+score+".\n请输入名字记录得分：", "输入",
-                    JOptionPane.PLAIN_MESSAGE);
-            if (userName.strip().equals("")){
+                    JOptionPane.PLAIN_MESSAGE).strip();
+            if ("".equals(userName) || userName == null){
                 userName = "unknown user";
             }
             RankLine rankList = new RankLine(userName, score, currentTime);
@@ -349,11 +381,11 @@ public class Game extends JPanel {
         // 获取屏幕窗口信息
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         JFrame rankingFrame = new JFrame("排行榜");
-        rankingFrame.setSize(Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT);
+        rankingFrame.setSize(MainFrame.WINDOW_WIDTH, MainFrame.WINDOW_HEIGHT);
         rankingFrame.setResizable(false);
         //设置窗口的大小和位置,居中放置
-        rankingFrame.setBounds(((int) screenSize.getWidth() - Main.WINDOW_WIDTH) / 2, 0,
-                Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT);
+        rankingFrame.setBounds(((int) screenSize.getWidth() - MainFrame.WINDOW_WIDTH) / 2, 0,
+                MainFrame.WINDOW_WIDTH, MainFrame.WINDOW_HEIGHT);
         rankingFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         rankingFrame.add(new Ranking().mainPanel);
@@ -392,10 +424,10 @@ public class Game extends JPanel {
         super.paint(g);
 
         // 绘制背景,图片滚动
-        g.drawImage(Settings.getInstance().getBackground(), 0, this.backGroundTop - Main.WINDOW_HEIGHT, null);
-        g.drawImage(Settings.getInstance().getBackground(), 0, this.backGroundTop, null);
+        g.drawImage(backGround, 0, this.backGroundTop - MainFrame.WINDOW_HEIGHT, null);
+        g.drawImage(backGround, 0, this.backGroundTop, null);
         this.backGroundTop += 1;
-        if (this.backGroundTop == Main.WINDOW_HEIGHT) {
+        if (this.backGroundTop == MainFrame.WINDOW_HEIGHT) {
             this.backGroundTop = 0;
         }
 
@@ -415,7 +447,6 @@ public class Game extends JPanel {
 
         //绘制得分和生命值
         paintScoreAndLife(g);
-
     }
 
     /**
@@ -456,10 +487,9 @@ public class Game extends JPanel {
         y = y + 20;
         g.drawString("LIFE:" + this.heroAircraft.getHp(), x, y);
         if (gameOverFlag) {
-            g.drawString("GAME OVER", Main.WINDOW_WIDTH / 2, Main.WINDOW_HEIGHT /2);
-            g.drawString("SCORE:" + this.score, Main.WINDOW_WIDTH/2, Main.WINDOW_HEIGHT /2 + 20);
+            g.drawString("GAME OVER", MainFrame.WINDOW_WIDTH / 2, MainFrame.WINDOW_HEIGHT /2);
+            g.drawString("SCORE:" + this.score, MainFrame.WINDOW_WIDTH/2, MainFrame.WINDOW_HEIGHT /2 + 20);
         }
     }
-
 
 }

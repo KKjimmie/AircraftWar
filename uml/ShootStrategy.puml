@@ -26,7 +26,6 @@ abstract class AbstractAircraft
     + shoot():List<BaseBullet>
 }
 
-
 ShootStrategy <|.. DirectShoot
 ShootStrategy <|.. ScatteredShoot
 AbstractAircraft o--> ShootStrategy

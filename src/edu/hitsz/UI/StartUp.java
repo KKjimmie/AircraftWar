@@ -1,10 +1,7 @@
 package edu.hitsz.UI;
 
-import edu.hitsz.application.Main;
 import edu.hitsz.application.Settings;
-
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -52,7 +49,7 @@ public class StartUp extends JFrame{
                 if(option == 1) {
                     Settings.getInstance().setSoundOff();
                 }else {
-                    Settings.getInstance().setSoundOff();
+                    Settings.getInstance().setSoundOn();
                 }
             }
         });

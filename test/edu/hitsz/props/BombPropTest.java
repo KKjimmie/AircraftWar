@@ -4,6 +4,7 @@ import edu.hitsz.aircraft.AbstractAircraft;
 import edu.hitsz.aircraft.EliteEnemy;
 import edu.hitsz.aircraft.HeroAircraft;
 import edu.hitsz.basic.AbstractFlyingObject;
+import edu.hitsz.basic.CanBoom;
 import edu.hitsz.bullet.BaseBullet;
 import org.junit.jupiter.api.*;
 
@@ -46,7 +47,13 @@ class BombPropTest {
                 enemyBullets.addAll(enemy.shoot());
             }
         }
-        bombProp.boom(enemys, enemyBullets);
+        for(var emeny : enemys){
+            bombProp.addCanBoom((CanBoom) emeny);
+        }
+        for(var enemyBullet : enemyBullets){
+            bombProp.addCanBoom((CanBoom) enemyBullet);
+        }
+        bombProp.work();
         enemys.removeIf(AbstractFlyingObject::notValid);
         enemyBullets.removeIf(AbstractFlyingObject::notValid);
         assertAll("boom",
@@ -57,7 +64,7 @@ class BombPropTest {
     @DisplayName("BombProp Crash Test")
     @Test
     void crash(){
-        HeroAircraft heroAircraft = HeroAircraft.getInstance();
+        HeroAircraft heroAircraft = HeroAircraft.getInstance(0, 0, 0, 0, 0);
         assertEquals(true, heroAircraft.crash(bombProp), "Crash Test Fail!");
     }
 }

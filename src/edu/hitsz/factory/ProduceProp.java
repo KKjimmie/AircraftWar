@@ -11,8 +11,6 @@ public interface ProduceProp {
      *
      * @param locationX x
      * @param locationY y
-     * @param speedX x速度
-     * @param speedY y速度
      * @return AbstractProp
      */
     AbstractProp produceProp(int locationX, int locationY);

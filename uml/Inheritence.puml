@@ -51,7 +51,7 @@ abstract class AbstractProp
 {
     # int bounceNum
     + AbstractProp(int locationX, int locationY, int speedX, int speedY)
-    + work(HeroAircraft heroAircraft):void
+    + work():void
     + forward():void
 }
 
@@ -75,16 +75,20 @@ class HeroAircraft {
     - int shootNum
     - int power
     - int direction
+    - int maxShootMun
+    - int maxHeroHp
+    - {static} instance
     + HeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp)
+    + {static} getInstance():HeroAircraft
+    + {static} HeroAircraft getInstance(int locationX, int locationY, int speedX, int speedY, int hp):HeroAircraft
+    + getShootNum():int
+    + getMaxShootNum():int
     + forward():void
     + shoot():List<BaseBullet>
     + setShootNum(int num):void
-}
-
-class MobEnemy {
-    + MobEnemy(int locationX, int locationY, int speedX, int speedY, int hp)
-    + forward():void
-    + shoot():List<BaseBullet>
+    + resetShootNum():void
+    + setHeroHp():void
+    + decreaseShootNum():void
 }
 
 class EliteEnemy {
@@ -97,6 +101,13 @@ class EliteEnemy {
     + forward():void
     + shoot():List<BaseBullet>
     + genProp():AbstractProp
+    + boom():void
+}
+class MobEnemy {
+    + MobEnemy(int locationX, int locationY, int speedX, int speedY, int hp)
+    + forward():void
+    + shoot():List<BaseBullet>
+    + boom():void
 }
 
 class Boss {
@@ -119,26 +130,28 @@ class HeroBullet {
 class EnemyBullet {
     + EnemyBullet(int locationX, int locationY,
      int speedX, int speedY, int power)
+    + boom() : vois
 }
 
 class BloodProp {
     - int plusHp
     + BloodProp(int locationX, int locationY, int speedX, int speedY)
-    + work(HeroAircraft heroAircraft):void
+    + work():void
 }
 
-class BombProp {
-    - String message
+class BombProp{
+    - List<CanBoom> canBoomList
     + BombProp(int locationX, int locationY, int speedX, int speedY)
-    + work(HeroAircraft heroAircraft):void
-    + boom(List<AbstractAircraft> enemyAircrafts):void
+    + addCanBoom(CanBoom canBoom) : void
+    + removeCanBoom(CanBoom canBoom) : void
+    + notifyAllToBoom() : void
+    + work() : void
 }
 
 class BulletProp{
-    - String message
     - int bulletNumAdd
     + BulletProp(int locationX, int locationY, int speedX, int speedY)
-    + work(HeroAircraft heroAircraft):void
+    + work():void
 }
 
 

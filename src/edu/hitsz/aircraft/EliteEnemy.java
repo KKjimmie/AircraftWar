@@ -1,7 +1,8 @@
 package edu.hitsz.aircraft;
 
-import edu.hitsz.application.Main;
+import edu.hitsz.UI.MainFrame;
 import edu.hitsz.application.Settings;
+import edu.hitsz.basic.CanBoom;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.factory.BloodPropFactory;
 import edu.hitsz.factory.BombPropFactory;
@@ -16,7 +17,7 @@ import java.util.Random;
  * 精英敌机，会射出子弹
  * @author 柯嘉铭
  */
-public class EliteEnemy extends AbstractAircraft{
+public class EliteEnemy extends AbstractAircraft implements CanBoom {
 
     /** 攻击方式 */
     private int power = Settings.getInstance().eliteEnemyPower;
@@ -37,7 +38,7 @@ public class EliteEnemy extends AbstractAircraft{
     public void forward() {
         super.forward();
         // 判定 y 轴向下飞行出界
-        if (locationY >= Main.WINDOW_HEIGHT ) {
+        if (locationY >= MainFrame.WINDOW_HEIGHT ) {
             vanish();
         }
     }
@@ -63,5 +64,10 @@ public class EliteEnemy extends AbstractAircraft{
     @Override
     public List<BaseBullet> shoot() {
         return strategy.shootMode(false, this.locationX, this.locationY, this.direction, this.power, this.shootNum);
+    }
+
+    @Override
+    public void boom() {
+        vanish();
     }
 }
